@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require_tree .
+//= require_tree ./cough_scripts1
+//= require cough_scripts2/script1
 
 alert('hello');
