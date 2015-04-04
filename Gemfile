@@ -14,3 +14,9 @@ group :development, :test do
   gem 'byebug'
   gem 'web-console', '~> 2.0'
 end
+
+#gem 'react-rails', git: 'git@github.com:reactjs/react-rails.git'
+#gem 'react-rails', github: 'git@github.com:reactjs/react-rails.git', branch: 'master'
+gem 'react-rails'
+
+# gem 'therubyracer', platforms: :ruby
