@@ -1,5 +1,3 @@
-#require 'tilt'
-
 class CoughSyrupTiltTemplate < Tilt::Template
   self.default_mime_type = 'application/javascript'
 
@@ -46,6 +44,4 @@ class CoughSyrupTiltTemplate < Tilt::Template
   end
 end
 
-Sprockets.register_engine('.cough', CoughSyrupTiltTemplate)
-
-#Tilt.register(CoughSyrupTiltTemplate, 'cough')
+Rails.application.assets.register_engine('.cough', CoughSyrupTiltTemplate)
