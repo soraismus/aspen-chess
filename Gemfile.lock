@@ -9,6 +9,13 @@ GIT
       rails (>= 3.1)
       react-source (~> 0.13)
 
+PATH
+  remote: /home/theo/projects/gems/cough-rails-0.0.0
+  specs:
+    cough-rails (0.0.0)
+      cough-syrup (>= 0.0.0)
+      railties (>= 4.0.0.beta, < 5.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -62,9 +69,6 @@ GEM
     coffee-script-source (1.9.1)
     columnize (0.9.0)
     connection_pool (2.1.3)
-    cough-rails (0.0.0)
-      cough-syrup (>= 0.0.0)
-      railties (>= 4.0.0.beta, < 5.0)
     cough-syrup (0.0.0)
       cough-syrup-source
       execjs
@@ -159,7 +163,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
-  cough-rails (= 0.0.0)
+  cough-rails!
   jquery-rails
   rails (= 4.2.0)
   react-rails!
