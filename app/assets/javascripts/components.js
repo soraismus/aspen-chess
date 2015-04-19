@@ -1,0 +1,1 @@
+//= require ./bundled_components
