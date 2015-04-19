@@ -1,3 +1,0 @@
-fn = \x -> alert x
-
-fn 'cough_scripts2/script1'
