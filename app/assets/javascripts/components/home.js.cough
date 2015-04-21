@@ -1,12 +1,17 @@
 NotSignedIn = require './not_signed_in'
-SignedIn    = require './signed_in'
+# SignedIn    = require './signed_in'
 
 Home = \props ->
-  { home_signed_in, signed_in } = props
+  NotSignedIn ()
+
+###
+Home = \props ->
+  { signed_in } = props
 
   if signed_in
     SignedIn home_signed_in
   else
     NotSignedIn ()
+###
 
 module.exports = Home

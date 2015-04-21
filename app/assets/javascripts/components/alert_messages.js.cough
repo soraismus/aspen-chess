@@ -1,8 +1,11 @@
-{ div } = require('react').DOM
+{ div } = require './DOM'
 
 createAlertMessage = ([key, value], index) ->
   # Bootstrap aspect.
-  div ({ className: "alert alert-#{key}", key: "alert_#{index}" }, value)
+  div
+    className : "alert alert-#{key}"
+    key       : "alert_#{index}" 
+    value
 
 AlertMessages = \messages ->
   messages.map createAlertMessage
