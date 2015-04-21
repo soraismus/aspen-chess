@@ -5,7 +5,7 @@ LinkItem = require './link_item'
 SessionManagement = \signedIn? ->
   href     = if signedIn? then '/signout' else '/signin'
   linkText = if signedIn? then 'Sign out' else 'Sign in'
-  LinkItem (a, href, linkText)
+  LinkItem (a, { href }, linkText)
 
 ###
 SessionManagement = \signed-in? ->
