@@ -1,0 +1,5 @@
+# setDivClassname
+
+Span6_3 = setDivClassname 'span6 offset3'
+
+module.exports = Span6_3

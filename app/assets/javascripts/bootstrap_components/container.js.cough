@@ -1,0 +1,5 @@
+setDivClassname = require '../react_utilities/set_div_classname'
+
+Container = setDivClassname 'container'
+
+module.exports = Container

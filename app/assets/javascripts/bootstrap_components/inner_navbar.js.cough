@@ -1,0 +1,5 @@
+setDivClassname = require '../react_utilities/set_div_classname'
+
+InnerNavbar = setDivClassname 'navbar-inner'
+
+module.exports = InnerNavbar

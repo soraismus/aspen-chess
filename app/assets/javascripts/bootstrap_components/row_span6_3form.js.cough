@@ -1,0 +1,16 @@
+# __form
+# object?
+# RowSpan6_3 = require './row_span6_3'
+# apply
+# apply-unsplat
+
+RowSpan6_3Form = \label ->
+  form = __form label
+
+  (args..., last-arg) ->
+    if object? last-arg
+      RowSpan6_3 ((apply form args), last-arg.outsideForm)
+    else
+      RowSpan6_3 (apply-unsplat form (args, last-arg))
+
+module.exports = RowSpan6_3Form

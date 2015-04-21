@@ -1,0 +1,8 @@
+Container   = require './container'
+FixedNavbar = require './fixed_navbar'
+InnerNavbar = require './inner_navbar'
+
+FixedNavbarContainer = (args...) ->
+  FixedNavbar (InnerNavbar (Container (args...)))
+
+module.exports = FixedNavbarContainer

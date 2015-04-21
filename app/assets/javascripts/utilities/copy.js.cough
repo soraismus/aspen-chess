@@ -1,0 +1,25 @@
+copy = \value ->
+  switch
+    when isArray value  then copyArray value
+    when isObject value then copyObject value
+    else value
+
+copyArray = \array ->
+  array.map identity
+
+copyObject = \object ->
+  result = {}
+  for own key, value of object
+    result[key] = object
+  result
+
+identity = \value ->
+  value
+
+isArray = \value ->
+  Array.isArray value
+
+isObject = \value ->
+  value == Object value
+
+module.exports = copy

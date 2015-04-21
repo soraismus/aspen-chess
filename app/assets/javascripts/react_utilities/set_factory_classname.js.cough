@@ -1,0 +1,7 @@
+set = require '../utilities/set'
+
+setFactoryClassname = (factory) -> (className) -> (props, components...) ->
+  newProps = set (props, 'className', className)
+  factory (newProps, components...)
+
+module.exports = setFactoryClassname

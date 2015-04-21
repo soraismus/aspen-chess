@@ -1,0 +1,6 @@
+# apply
+# Row     = require './row'
+# Span6_3 = require './span6_3'
+
+RowSpan6_3 = (args...) ->
+  Row (apply Span6_3 args)

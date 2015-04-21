@@ -1,0 +1,8 @@
+copy = require './copy'
+
+set = (dataStructure, key, value) ->
+  result = copy dataStructure
+  result[key] = value
+  result
+
+module.exports = set
