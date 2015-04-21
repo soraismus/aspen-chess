@@ -1,5 +1,5 @@
-React    = require 'react'
-MainView = require './components/main_view'
+React = require 'react'
+App   = require './components/app.js.cough'
 
 module.exports = \props ->
-  React.renderToString (React.createElement (MainView, props))
+  React.renderToString (React.createElement (App, props))
