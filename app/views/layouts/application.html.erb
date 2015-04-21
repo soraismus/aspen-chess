@@ -7,12 +7,8 @@
 </head>
 <body>
 
-  <%= react_component(
-    'MainView',                             # Name of main React view.
-    { msg: 'Salut', color: 'yellow', height: '300px' },
-    { id: 'react-node', prerender: true }   # Server configuration.
-  ) %>
-
+  <%= react_component('App', app_state, server_config) %>
   <%= javascript_include_tag('application') %>
+
 </body>
 </html>
