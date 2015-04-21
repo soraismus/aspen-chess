@@ -1,8 +1,8 @@
-{ header }          = '../components/DOM'
+{ header }          = require '../components/DOM'
 setFactoryClassname = require '../react_utilities/set_factory_classname'
 
-navbar-class = 'navbar navbar-fixed-top navbar-inverse'
+navbarClass = 'navbar navbar-fixed-top navbar-inverse'
 
-FixedNavbar = setFactoryClassname header navbar-class
+FixedNavbar = setFactoryClassname header navbarClass
 
 module.exports = FixedNavbar
