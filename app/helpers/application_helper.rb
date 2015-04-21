@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def app_state
-    { alert: alert, debug: debug, main: main }
+    { alert: alert, debug: debug, header: header, main: main }
   end
 
   def debug
@@ -21,6 +21,10 @@ module ApplicationHelper
                       .html_safe
   end
 
+  def header
+    { signed_in: signed_in? }
+  end
+
   def home
     nil
   end
@@ -31,5 +35,9 @@ module ApplicationHelper
 
   def server_config
     { id: 'react-node', prerender: true }
+  end
+
+  def signed_in?
+    false
   end
 end
