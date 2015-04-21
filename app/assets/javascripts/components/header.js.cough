@@ -5,31 +5,21 @@ SessionManagement = require './session_management'
 { a, div, nav, ul }       = require './DOM'
 
 Header = \props ->
-  div
-    id : 'header'
-    a
-      href : '/#'
-      id   : 'logo'
-      'ChessPlay'
-
-###
-Header = \props ->
   { signed_in } = props
 
   div
     irrelevant : null
     a
-      href : '#'
-      id   : 'logo' 
-     'ChessPlay'
+      href : '/#'
+      id   : 'logo'
+      'ChessPlay'
     nav
       irrelevant : null
       ul
         className : 'viewport-right'
         LinkItem (a, { href: '/' }, 'Home')
         LinkItem (a, { href: '#' }, 'Contact')
-        SessionManagement signed_in 
-###
+        SessionManagement signed_in
 
 ###
 Header = \props ->
