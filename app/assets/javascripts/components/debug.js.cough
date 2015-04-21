@@ -1,4 +1,4 @@
-{ pre } = require './DOM.js.cough'
+{ pre } = require './DOM'
 
 Debug = \props ->
   if props.should_debug

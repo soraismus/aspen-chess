@@ -8,8 +8,8 @@
     "test": "test"
   },
   "scripts": {
-    "bundle-app": "browserify -t coughify -t strictify --extension='.cough' app/assets/javascripts/application/initializer.js.cough > app/assets/javascripts/bundle.js",
-    "bundle-components": "browserify -s App -t coughify -t strictify --extension='.cough' app/assets/javascripts/server_hook.js.cough > app/assets/javascripts/bundled_components.js",
+    "bundle-app": "browserify -t coughify -t strictify --extension='.js.cough' app/assets/javascripts/application/initializer > app/assets/javascripts/bundle.js",
+    "bundle-components": "browserify -s App -t coughify -t strictify --extension='.js.cough' app/assets/javascripts/server_hook > app/assets/javascripts/bundled_components.js",
     "bundle": "npm run bundle-app & npm run bundle-components"
   },
   "author": "",

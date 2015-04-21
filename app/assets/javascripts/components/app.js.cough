@@ -3,8 +3,8 @@
 # Header        = require './header'
 # Main          = require './main'
 
-Debug           = require './debug.js.cough'
-{ div, footer } = require './DOM.js.cough'
+Debug           = require './debug'
+{ div, footer } = require './DOM'
 
 App = \props ->
   { debug } = props
