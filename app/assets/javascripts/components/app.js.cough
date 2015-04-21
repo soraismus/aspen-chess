@@ -8,24 +8,11 @@ App = \props ->
   { alert, debug, header, main } = props
 
   div
-    id: 'app'
+    id : 'app'
     Header header
     AlertMessages alert
     Main main
     footer null
     Debug debug
-
-###
-App = \props ->
-  # `alert` does not clobber the native `alert` function.
-  { alert, debug, header, main, messages } = props
-  _div (
-    Header header
-    AlertMessages alert
-    Main main
-    footer noProps
-    Debug debug
-  )
-###
 
 module.exports = App
