@@ -8,9 +8,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "bundle-app": "browserify app/assets/javascripts/application/initializer.js > app/assets/javascripts/bundle.js",
-    "bundle-components": "browserify -s MainView app/assets/javascripts/server_hook.js > app/assets/javascripts/bundled_components.js",
+    "bundle-app": "browserify -t coughify -t strictify --extension='.cough' app/assets/javascripts/application/initializer.js > app/assets/javascripts/bundle.js",
+    "bundle-components": "browserify -s MainView -t coughify -t strictify --extension='.cough' app/assets/javascripts/server_hook.js > app/assets/javascripts/bundled_components.js",
     "bundle": "npm run bundle-app & npm run bundle-components"
   },
   "author": "",
@@ -22,6 +21,9 @@
     "reactive-aspen": "0.0.3"
   },
   "devDependencies": {
-    "browserify": "^9.0.8"
+    "browserify": "^9.0.8",
+    "cough-syrup": "0.0.1",
+    "coughify": "0.0.0",
+    "strictify": "^0.2.0"
   }
 }
