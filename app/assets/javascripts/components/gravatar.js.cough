@@ -1,0 +1,6 @@
+{ img } = require './DOM'
+
+Gravatar = \props ->
+  img { className: 'gravatar', src: props.url, alt: props.name }
+
+module.exports = Gravatar

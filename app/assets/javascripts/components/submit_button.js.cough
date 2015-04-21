@@ -1,0 +1,7 @@
+{ input } = require './DOM'
+
+SubmitButton = \value ->
+  className = 'btn btn-large btn-primary' # Bootstrap aspect.
+  input { className, name: 'commit', type: 'submit', value }
+
+module.exports = SubmitButton

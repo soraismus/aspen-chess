@@ -1,0 +1,106 @@
+# require ../utilities2
+# require ../chessplay/extractors
+# require ../chessplay/utilities
+
+# ChessApp
+
+# img
+# table
+# td
+# tr
+
+# --------
+# imports
+# --------
+
+# `white` has two sources: `chessplay.utilities` and `ChessApp`.
+{ img, extractors, table, td, tr, utilities, white } = ChessApp
+{ constants, extractors, utilities } = chessplay
+
+square-at = extractors.square-at
+color-of = extractors.color-of
+black? = utilities.black? 
+occupied? = utilities.occupied?
+type-at = extractors.corresponding-black-chessman
+
+# ----- 
+# main
+# -----
+
+# Initial, default settings.
+active-color       = white
+current-user-color = white
+orientation        = white
+
+active? = \color ->
+  color == active-color && color == current-user-color
+
+add-chessboard = \board ->
+  ranks = fmap (add-rank board) (get-indices ())
+  table
+    className : 'board'
+    ranks
+
+add-chessman = (color, type, rank, file) ->
+  img
+    className : chessman-class (rank, file, color)
+    src       : src-for (color, type)
+
+add-rank = \board \rank ->
+  squares = fmap (add-square (board, rank)) (get-indices ())
+  tr
+    className : 'rank'
+    key       : rank-key rank
+    squares
+
+add-square = (board, rank) -> (file) ->
+  square = square-at (board) [rank, file]
+  chessman = chessman-on (square, rank, file)
+  td
+    className : square-class (rank, file)
+    key       : square-key (rank, file)
+    chessman
+
+Chessboard = \env ->
+  current-user-color = env.color
+  orientation = env.orientation
+  context = env.context
+  active-color = context.player
+
+  add-chessboard context.board
+
+chessman-class = (rank, file, color) ->
+  # "active piece ch-pos-#{rank}-#{file}"
+
+  klasses =
+    piece  : true
+    active : active? color
+
+  klasses["ch-pos-#{rank}-#{file}"] = true
+
+  get-classname klasses
+
+chessman-on = (square, rank, file) ->
+  if occupied? square
+    color = color-of square
+    type = type-at square
+    add-chessman (color, type, rank, file)
+  else
+    null
+
+get-indices = ->
+  if black? orientation then [7..0] else [0..7]
+
+rank-key = \rank ->
+  "rank-#{rank}"
+
+square-class = (rank, file) ->
+  "sq sq-pos-#{rank}-#{file}"
+
+square-key = (rank, file) ->
+  "pos-#{rank}-#{file}"
+
+src-for = (color, png-type) ->
+  "assets/#{color}#{png-type}.png"
+
+module.exports = Chessboard

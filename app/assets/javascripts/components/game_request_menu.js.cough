@@ -1,0 +1,20 @@
+# LinkItem
+{ ul } = require './DOM'
+
+GameRequestMenu = ->
+  href = '#'
+
+  game-links = ['WhiteGame', 'BlackGame', 'IndiffGame'].map __a
+
+  game-request-option = (linkText, index, color) ->
+    props = if (? color) then { 'data-color': color, href } else { href }
+    LinkItem (game-links[index], props, linkText)
+
+  ul
+    className: 'dropdown-menu request-game'  # Bootstrap aspect.
+
+    game-request-option ('As white player', 0, white)
+    game-request-option ('As black player', 1, black)
+    game-request-option ('No preference', 2)
+
+module.exports = GameRequestMenu

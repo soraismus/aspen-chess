@@ -1,0 +1,13 @@
+Home        = require './home'
+SigninForm  = require './signin_form'
+SignupForm  = require './signup_form'
+
+Main = \props ->
+  { csrf, home, view } = props
+
+  switch view
+    when 'sessions', 'signin' then SigninForm csrf
+    when 'users',    'signup' then SignupForm csrf
+    else                           Home home
+
+module.exports = Main

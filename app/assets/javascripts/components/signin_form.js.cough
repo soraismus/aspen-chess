@@ -1,0 +1,20 @@
+# MainForm
+# __PasswordInput
+# RowSpan6_3Form
+# __TextInput
+
+SigninForm = \csrf ->
+  MainForm (
+    {
+      form        : RowSpan6_3Form 'Signin'
+      actionPath  : '/sessions'
+      h1Label     : 'Sign in'
+      csrf        : csrf
+      submitValue : 'Sign in'
+      outsideForm : NewUserParagraph ()
+    }
+    __TextInput 'SigninEmail' { name: 'email' }
+    __PasswordInput 'SigninPassword' { name: 'password' }
+  )
+
+module.exports = SigninForm

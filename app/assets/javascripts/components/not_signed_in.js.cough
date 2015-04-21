@@ -1,0 +1,18 @@
+# div
+# _h1
+# h2
+# noProps
+# SignupButton
+# span
+
+welcome = 'Welcome to '
+
+NotSignedIn = ->
+  div (
+    { className: 'center hero-unit' } # Bootstrap aspect.
+    _h1 (welcome, span ({ className: 'app-title' }, 'Chessplay'), '.')
+    h2 (noProps, "Matthew Hilty's Rails demo application")
+    SignupButton ()
+  )
+
+module.exports = NotSignedIn

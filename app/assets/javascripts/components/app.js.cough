@@ -1,0 +1,30 @@
+# AlertMessages = require './alert_messages'
+# _div
+# Header        = require './header'
+# Main          = require './main'
+
+Debug           = require './debug.js.cough'
+{ div, footer } = require './DOM.js.cough'
+
+App = \props ->
+  { debug } = props
+
+  div
+    id: 'app'
+    footer null
+    Debug debug
+
+###
+App = \props ->
+  # `alert` does not clobber the native `alert` function.
+  { alert, debug, header, main, messages } = props
+  _div (
+    Header header
+    AlertMessages alert
+    Main main
+    footer noProps
+    Debug debug
+  )
+###
+
+module.exports = App

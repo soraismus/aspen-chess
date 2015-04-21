@@ -1,0 +1,13 @@
+# __a
+
+GameRequestLink = (id, index) ->
+  props =
+    className      : 'dropdown-toggle' # Bootstrap aspect.
+    'data-toggle'  : 'dropdown'        # Bootstrap aspect.
+    'data-userid'  : id
+    'data-index'   : index
+    href           : '#'
+
+  __a 'GameRequest' (props, ' Request Game')
+
+module.exports = GameRequestLink

@@ -1,0 +1,4 @@
+getDefaultFormProps = \action-path ->
+  { action: action-path, method: 'post', acceptCharset: 'UTF-8' }
+
+module.exports = getDefaultFormProps

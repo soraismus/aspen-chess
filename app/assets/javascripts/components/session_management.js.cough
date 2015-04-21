@@ -1,0 +1,14 @@
+# __a
+# LinkItem
+
+SessionManagement = \signed-in? ->
+  signin-link  = __a 'Signin'
+  signout-link = __a 'Signout'
+
+  injected-link = if signed-in? then signout-link else signin-link
+  href          = if signed-in? then '/signout' else '/signin'
+  link-text     = if signed-in? then 'Sign out' else 'Sign in'
+
+  LinkItem (injected-link, href, link-text)
+
+module.exports = SessionManagement

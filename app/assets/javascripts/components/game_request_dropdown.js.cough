@@ -1,0 +1,17 @@
+GameRequestLink = require './game_request_link'
+GameRequestMenu = require './game_request_menu'
+{ span }        = require './DOM'
+
+GameRequestDropdown = \props ->
+  { id, index, open } = props
+
+  span (
+    {
+      id: "dropdown-#{id}"
+      className: get-classname { dropdown: true, open }
+    }
+    GameRequestLink (id, index)
+    GameRequestMenu ()
+  )
+
+module.exports = GameRequestDropdown

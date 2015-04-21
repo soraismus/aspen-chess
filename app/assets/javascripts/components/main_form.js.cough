@@ -1,0 +1,22 @@
+# apply-unsplat
+getDefaultFormProps = require './get_default_form_props'
+# FormHiddenInputDiv
+# setDivClassname
+SubmitButton        = require './submit_button'
+
+MainForm = (props, inputs...) ->
+  { actionPath, csrf, form, h1Label, outsideForm, submitValue } = props
+
+  # WET, but how to fix?
+  setDivClassname 'container' (
+    _h1 h1Label
+    apply-unsplat form (
+      getDefaultFormProps actionPath
+      FormHiddenInputDiv csrf
+      inputs
+      SubmitButton submitValue 
+      if (? outsideForm) then { outsideForm } else null
+    )
+  )
+
+module.exports = MainForm

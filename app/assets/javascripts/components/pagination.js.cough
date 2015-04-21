@@ -1,0 +1,24 @@
+# __a
+{ div, li, ul } = require './DOM'
+noProps         = null
+
+
+PageLink = (props, index) ->
+  { className, page, rel, text } = props
+
+  key = "pg-#{index}"
+
+  href = \page ->
+    if (? page) then { href: "/?page=#{page}" } else {}
+
+  li ({ className, key, rel }, __a 'Pagination' ((href page), text))
+
+Pagination = \props ->
+  page-links = JSON.parse props.pagination_data
+
+  div (
+    { className: 'pagination' }
+    ul (noProps, (page-links.map PageLink))
+  )
+
+module.exports = Pagination

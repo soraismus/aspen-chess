@@ -1,0 +1,46 @@
+# __a
+{ div, img, span } = require './DOM'
+# { constructors, extractors, utilities } = chessplay
+# generate-chessman = constructors.generate-chessman
+# chessman-type-of = extractors.chessman-type-of
+# opposing-color   = utilities.opposing-color
+
+add-promotion-msg = \message ->
+  span
+    id : 'promotion-msg'
+    message
+
+add-promotion-option = \color \png-type ->
+  chessman = generate-chessman ((chessman-type-of png-type), color)
+  id = "PromType-#{png-type}"
+  __a (id)
+    id        : id
+    key       : id
+    className : 'promotion-option'
+    onClick   : true
+    add-option-image (color, png-type)
+
+add-option-image = (color, png-type) ->
+  img
+    className : 'option-image'
+    src       : src-for (color, png-type)
+
+PromOptsDisplay = (promoting?, active-color) ->
+  return null unless promoting?
+
+  content = 'Promote your pawn.'
+  color   = opposing-color active-color
+
+  # Load the following:
+  courtiers = ['q', 'r', 'b', 'n']
+
+  div
+    id : 'promotion-options'
+    add-promotion-msg content
+    courtiers.map (add-promotion-option color)
+
+# WET.
+src-for = (color, png-type) ->
+  "assets/#{color}#{png-type}.png"
+
+module.exports = PropOptsDisplay

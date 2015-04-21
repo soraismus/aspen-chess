@@ -1,0 +1,21 @@
+GameRequestDropdown = require './game_request_dropdown'
+Gravatar            = require './gravatar'
+{ li }              = require './DOM'
+UserName            = require './user_name'
+
+User = (current-user) -> (props, index) ->
+
+  # `open` will generally be undefined.
+  # When it is undefined, a user's dropdown will be closed.
+  # However, if `open` is true, then the dropdown will be open.
+
+  { gravatar_url, id, name, open } = props
+
+  li (
+    { key: "user-#{index}" }
+    Gravatar { name, url: gravatar_url }
+    UserName name 
+    GameRequestDropdown { id, index, open }
+  )
+
+module.exports = User

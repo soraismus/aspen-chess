@@ -1,0 +1,27 @@
+# __a
+# FixedNavbarContainer
+# LinkItem            
+noProps           = null
+SessionManagement = require './session_management'
+{ nav, ul }       = require('react').DOM
+
+Header = \props ->
+  { signed_in } = props
+
+  FixedNavbarContainer (
+
+    # Bootstrap aspect?
+    __a 'ChessPlay' ({ href: '#', id: 'logo' }, 'ChessPlay')
+
+    nav (
+      noProps
+      ul (
+        { className: 'viewport-right' } # CSS aspect.
+        LinkItem ((__a 'Home'), '/', 'Home')
+        LinkItem ((__a 'Contact'), '#', 'Contact')
+        SessionManagement signed_in 
+      )
+    )
+  )
+
+module.exports = Header

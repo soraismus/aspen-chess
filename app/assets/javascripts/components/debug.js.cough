@@ -1,0 +1,9 @@
+{ pre } = require './DOM.js.cough'
+
+Debug = \props ->
+  if props.should_debug
+    pre ({ className: 'debug_dump' }, props.debug_params)
+  else
+    null
+
+module.exports = Debug

@@ -1,0 +1,19 @@
+# ChessDisplay
+# Notification
+# UserDisplay
+
+createNotification = Notification
+
+SignedIn = \props ->
+  { chess, notifications, playing, user_display } = props
+  { color, context, orientation } = chess
+
+  if playing
+    ChessDisplay chess
+  else
+    _div (
+      UserDisplay user_display
+      notifications.map createNotification
+    )
+
+module.exports = SignedIn

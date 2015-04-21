@@ -1,0 +1,26 @@
+# MainForm
+# __PasswordInput
+# RowSpan6_3Form
+# __TextInput
+
+SignupForm = \csrf ->
+  confirm-props =
+    label : 'Confirmation'
+    name  : 'user[password_confirmation]' 
+
+  MainForm (
+    {
+      form        : RowSpan6_3Form 'Signup'
+      actionPath  : '/users'
+      csrf        : csrf
+      h1Label     : 'Sign up'
+      submitValue : 'Create my account'
+    }
+
+    __TextInput 'SignupName' { name: 'user[name]' }
+    __TextInput 'SignupEmail' { name: 'user[email]' }
+    __PasswordInput 'SignupPassword' { name: 'user[password]' }
+    __PasswordInput 'SignupConfirm' confirm-props
+  )
+
+module.exports = SignupForm
