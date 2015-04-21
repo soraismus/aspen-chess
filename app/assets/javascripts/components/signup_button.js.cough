@@ -1,0 +1,17 @@
+# __a
+
+{ a } = require './DOM'
+
+className = 'btn btn-large btn-primary' # Bootstrap aspect.
+btnMsg    = 'Sign up now.'
+
+SignupButton = ->
+  a
+    className : className
+    href      : '/signup' 
+    btnMsg
+
+#SignupButton = ->
+#  __a 'Home-Signup' ({ className, href: '/signup' }, 'Sign up now.')
+
+module.exports = SignupButton
