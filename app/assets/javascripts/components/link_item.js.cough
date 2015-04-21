@@ -12,3 +12,5 @@ LinkItem = (injectedFactory, props, linkText) ->
       linkText
     )
   )
+
+module.exports = LinkItem
