@@ -10,4 +10,4 @@ initialState    = JSON.parse appNode.dataset.reactProps
 
 initialize (appNodeId, topViewFactory, initialState, viewImports)
 
-// Load event-controllers.
+# Load event-controllers.
