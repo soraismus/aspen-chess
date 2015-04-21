@@ -1,14 +1,22 @@
 # __a
-# LinkItem
+{ a }    = require './DOM'
+LinkItem = require './link_item'
 
+SessionManagement = \signedIn? ->
+  href     = if signedIn? then '/signout' else '/signin'
+  linkText = if signedIn? then 'Sign out' else 'Sign in'
+  LinkItem (a, href, linkText)
+
+###
 SessionManagement = \signed-in? ->
-  signin-link  = __a 'Signin'
-  signout-link = __a 'Signout'
+  #signin-link  = __a 'Signin'
+  #signout-link = __a 'Signout'
 
   injected-link = if signed-in? then signout-link else signin-link
   href          = if signed-in? then '/signout' else '/signin'
   link-text     = if signed-in? then 'Sign out' else 'Sign in'
 
   LinkItem (injected-link, href, link-text)
+###
 
 module.exports = SessionManagement
