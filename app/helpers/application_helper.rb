@@ -1,6 +1,10 @@
 module ApplicationHelper
+  def alert
+    flash
+  end
+
   def app_state
-    { debug: debug }
+    { alert: alert, debug: debug, main: main }
   end
 
   def debug
@@ -11,10 +15,18 @@ module ApplicationHelper
   end
 
   def debug_content(object)
-    Marshal::dump(object)
+    Marshal.dump(object)
     object = ERB::Util.html_escape(object.to_yaml)
                       .gsub("  ", "&nbsp; ")
                       .html_safe
+  end
+
+  def home
+    nil
+  end
+
+  def main
+    { home: home }
   end
 
   def server_config
