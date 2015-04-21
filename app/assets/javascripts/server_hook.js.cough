@@ -1,0 +1,5 @@
+React    = require 'react'
+MainView = require './components/main_view'
+
+module.exports = \props ->
+  React.renderToString (React.createElement (MainView, props))
