@@ -1,16 +1,15 @@
-# _div
-# Header        = require './header'
-
 AlertMessages   = require './alert_messages'
 Debug           = require './debug'
 { div, footer } = require './DOM'
+Header          = require './header'
 Main            = require './main'
 
 App = \props ->
-  { alert, debug, main } = props
+  { alert, debug, header, main } = props
 
   div
     id: 'app'
+    Header header
     AlertMessages alert
     Main main
     footer null

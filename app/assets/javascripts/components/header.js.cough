@@ -1,10 +1,37 @@
 # __a
-# FixedNavbarContainer
-# LinkItem            
-noProps           = null
+FixedNavbarContainer = require '../bootstrap_components/fixed_navbar_container'
+LinkItem          = require './link_item'
 SessionManagement = require './session_management'
-{ nav, ul }       = require('react').DOM
+{ a, div, nav, ul }       = require './DOM'
 
+Header = \props ->
+  div
+    id : 'header'
+    a
+      href : '/#'
+      id   : 'logo'
+      'ChessPlay'
+
+###
+Header = \props ->
+  { signed_in } = props
+
+  div
+    irrelevant : null
+    a
+      href : '#'
+      id   : 'logo' 
+     'ChessPlay'
+    nav
+      irrelevant : null
+      ul
+        className : 'viewport-right'
+        LinkItem (a, { href: '/' }, 'Home')
+        LinkItem (a, { href: '#' }, 'Contact')
+        SessionManagement signed_in 
+###
+
+###
 Header = \props ->
   { signed_in } = props
 
@@ -23,5 +50,6 @@ Header = \props ->
       )
     )
   )
+###
 
 module.exports = Header
