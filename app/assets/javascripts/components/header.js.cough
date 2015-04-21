@@ -1,13 +1,13 @@
 # __a
 FixedNavbarContainer = require '../bootstrap_components/fixed_navbar_container'
-LinkItem          = require './link_item'
-SessionManagement = require './session_management'
-{ a, div, nav, ul }       = require './DOM'
+LinkItem             = require './link_item'
+SessionManagement    = require './session_management'
+{ a, nav, ul }       = require './DOM'
 
 Header = \props ->
   { signed_in } = props
 
-  div
+  FixedNavbarContainer
     irrelevant : null
     a
       href : '/#'
