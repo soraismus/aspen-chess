@@ -1,4 +1,5 @@
 DOM    = require './DOM'
+div    = DOM.div
 input  = DOM.input
 _label = DOM.label
 
@@ -23,10 +24,15 @@ LabeledInput = \type \props ->
   htmlFor   = convertToHtmlFor name
   labelText = label || (convertToLabel name)
 
-  [
-    _label ({ htmlFor }, labelText)
-    input { id: htmlFor, name, type }
-  ]
+  div
+    irrelevant : null
+    _label
+      htmlFor : htmlFor
+      labelText
+    input
+      id   : htmlFor
+      name : name
+      type : type
 
 removeEndBracket = \string ->
   string.replace (']', '')
