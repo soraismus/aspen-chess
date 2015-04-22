@@ -3,6 +3,23 @@
 # RowSpan6_3Form
 # __TextInput
 
+{ EmailInput, PasswordInput, TextInput } = require './labeled_input'
+{ form }                                 = require './DOM'
+
+SignupForm = \csrf ->
+  form
+    irrelevant : null
+    TextInput
+      name : 'user[name]'
+    EmailInput
+      name : 'user[email]'
+    PasswordInput
+      name : 'user[password]'
+    PasswordInput
+      label : 'Confirmation'
+      name  : 'user[password_confirmation]'
+
+###
 SignupForm = \csrf ->
   confirm-props =
     label : 'Confirmation'
@@ -22,5 +39,6 @@ SignupForm = \csrf ->
     __PasswordInput 'SignupPassword' { name: 'user[password]' }
     __PasswordInput 'SignupConfirm' confirm-props
   )
+###
 
 module.exports = SignupForm

@@ -1,0 +1,48 @@
+DOM    = require './DOM'
+input  = DOM.input
+_label = DOM.label
+
+capitalize = \word ->
+  word[0].toUpperCase () + word.slice (1)
+
+_convertToHtmlFor = \name ->
+  transformStartingBracket (removeEndBracket name)
+
+convertToHtmlFor = \name ->
+  if simple? name then name else _convertToHtmlFor name
+
+_convertToLabel = \name ->
+  removeStartingBracketPrefix (removeEndBracket name)
+
+convertToLabel = \name ->
+  capitalize (if simple? name then name else _convertToLabel name)
+
+LabeledInput = \type \props ->
+  { label, name } = props
+
+  htmlFor   = convertToHtmlFor name
+  labelText = label || (convertToLabel name)
+
+  [
+    _label ({ htmlFor }, labelText)
+    input { id: htmlFor, name, type }
+  ]
+
+removeEndBracket = \string ->
+  string.replace (']', '')
+
+removeStartingBracketPrefix = \string ->
+  string.replace (/.*\[/, '')
+
+simple? = \name ->
+  ! (/\[/.test name)
+
+transformStartingBracket = \string ->
+  string.replace ('[', '_')
+
+module.exports = {
+  EmailInput    : LabeledInput 'email'
+  LabeledInput
+  TextInput     : LabeledInput 'text'
+  PasswordInput : LabeledInput 'password'
+}

@@ -1,8 +1,21 @@
-# MainForm
 # __PasswordInput
-# RowSpan6_3Form
 # __TextInput
+# MainForm
+# NewUserParagraph
+# RowSpan6_3Form
 
+{ EmailInput, PasswordInput, TextInput } = require './labeled_input'
+{ form } = require './DOM'
+
+SigninForm = \csrf ->
+  form
+    irrelevant : null
+    TextInput
+      name : 'email'
+    PasswordInput
+      name : 'password'
+
+###
 SigninForm = \csrf ->
   MainForm (
     {
@@ -16,5 +29,6 @@ SigninForm = \csrf ->
     __TextInput 'SigninEmail' { name: 'email' }
     __PasswordInput 'SigninPassword' { name: 'password' }
   )
+###
 
 module.exports = SigninForm
