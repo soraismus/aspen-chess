@@ -21,3 +21,6 @@ gem 'react-rails', github: 'reactjs/react-rails'
 #gem 'react-rails'
 
 # gem 'therubyracer', platforms: :ruby
+
+gem 'bootstrap-sass',          '2.3.2.0'
+gem 'bootstrap-will_paginate', '0.0.9'
