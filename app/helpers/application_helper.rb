@@ -7,6 +7,14 @@ module ApplicationHelper
     { alert: alert, debug: debug, header: header, main: main }
   end
 
+  def chess
+    nil
+  end
+
+  def csrf
+    { token: form_authenticity_token, param: request_forgery_protection_token }
+  end
+
   def debug
     {
       should_debug: Rails.env.development?,
@@ -21,16 +29,22 @@ module ApplicationHelper
                       .html_safe
   end
 
+  # WET; c.f. `home`.
   def header
     { signed_in: signed_in? }
   end
 
+  # WET; c.f. `header`.
   def home
-    nil
+    { user_home_view: user_home_view, signed_in: signed_in? }
   end
 
   def main
-    { home: home }
+    { csrf: csrf, home: home, view: view }
+  end
+
+  def pagination
+    nil
   end
 
   def server_config
@@ -39,5 +53,30 @@ module ApplicationHelper
 
   def signed_in?
     false
+  end
+
+  def user_display
+    { pagination: pagination, user_list: user_list }
+  end
+
+  def user_home_view
+    {
+      chess: chess,
+      notifications: [],
+      playing: false,
+      user_display: user_display
+    }
+  end
+
+  def user_list
+    nil
+  end
+
+  def view
+    case params[:controller]
+      when 'users'    then 'signup'
+      when 'sessions' then 'signin'
+      else                  nil
+    end
   end
 end
