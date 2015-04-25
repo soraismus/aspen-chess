@@ -1,12 +1,12 @@
-Home        = require './home'
-SigninForm  = require './signin_form'
-SignupForm  = require './signup_form'
+Home       = require './home'
+LoginForm  = require './login_form'
+SignupForm = require './signup_form'
 
 Main = \props ->
   { csrf, home, view } = props
 
   switch view
-    when 'signin' then SigninForm csrf
+    when 'login'  then LoginForm csrf
     when 'signup' then SignupForm csrf
     else               Home home
  

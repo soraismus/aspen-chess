@@ -31,12 +31,12 @@ module ApplicationHelper
 
   # WET; c.f. `home`.
   def header
-    { signed_in: signed_in? }
+    { logged_in: logged_in? }
   end
 
   # WET; c.f. `header`.
   def home
-    { user_home_view: user_home_view, signed_in: signed_in? }
+    { user_home_view: user_home_view, logged_in: logged_in? }
   end
 
   def main
@@ -51,7 +51,7 @@ module ApplicationHelper
     { id: 'react-node', prerender: true }
   end
 
-  def signed_in?
+  def logged_in?
     false
   end
 
@@ -75,7 +75,7 @@ module ApplicationHelper
   def view
     case params[:controller]
       when 'users'    then 'signup'
-      when 'sessions' then 'signin'
+      when 'sessions' then 'login'
       else                  nil
     end
   end

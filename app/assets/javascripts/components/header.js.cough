@@ -5,7 +5,7 @@ SessionManagement    = require './session_management'
 { a, nav, ul }       = require './DOM'
 
 Header = \props ->
-  { signed_in } = props
+  { logged_in } = props
 
   FixedNavbarContainer
     irrelevant : null
@@ -19,11 +19,11 @@ Header = \props ->
         className : 'viewport-right'
         LinkItem (a, { href: '/' }, 'Home')
         LinkItem (a, { href: '#' }, 'Contact')
-        SessionManagement signed_in
+        SessionManagement logged_in
 
 ###
 Header = \props ->
-  { signed_in } = props
+  { logged_in } = props
 
   FixedNavbarContainer (
 
@@ -36,7 +36,7 @@ Header = \props ->
         { className: 'viewport-right' } # CSS aspect.
         LinkItem ((__a 'Home'), '/', 'Home')
         LinkItem ((__a 'Contact'), '#', 'Contact')
-        SessionManagement signed_in 
+        SessionManagement logged_in 
       )
     )
   )
