@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
-  get 'static_pages/home'
+  root 'static_pages#home'
 
-  resources :users
-  resources :sessions
+  get 'signup' => 'users#new'
+  get 'signin' => 'sessions#new'
+
+  resources :users,    except: :new
+  resources :sessions, except: :new
 end
