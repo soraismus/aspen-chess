@@ -1,0 +1,188 @@
+black-chessmen = [
+  black-king   = 'k'
+  black-queen  = 'q'
+  black-rook   = 'r'
+  black-bishop = 'b'
+  black-knight = 'n'
+  black-pawn   = 'p'
+]
+
+white-chessmen = [
+  white-king   = 'K'
+  white-queen  = 'Q'
+  white-rook   = 'R'
+  white-bishop = 'B'
+  white-knight = 'N'
+  white-pawn   = 'P'
+]
+
+chessmen = black-chessmen.concat white-chessmen
+
+absent-color = '-'
+
+chessman-colors = [white, black] = ['w', 'b']
+
+colors = [absent-color].concat chessman-colors
+
+piece-types = [
+  king   = 'king'
+  queen  = 'queen'
+  rook   = 'rook'
+  bishop = 'bishop'
+  knight = 'knight'
+]
+
+chessman-types = piece-types.concat [pawn = 'pawn']
+
+castling-black = [
+  castling-black-kingward  = 'k'
+  castling-black-queenward = 'q'
+]
+
+castling-white = [
+  castling-white-kingward  = 'K'
+  castling-white-queenward = 'Q'
+]
+
+initial-board =
+  'rnbqkbnrPppppppp--------------------------------PpPPPPPPRNBQKBNR'
+
+full-castling-rts = 'KQkq'
+
+players = [
+  white-player = 'w'
+  black-player = 'b'
+]
+
+unset-passant-pos = '-'
+
+unset-passant-pos-code = '-'
+
+unset-promotion-pos = '-'
+
+constants = {
+  absent-color
+
+  bishop
+
+  black
+
+  black-bishop
+
+  black-chessmen
+
+  black-king
+
+  black-knight
+
+  black-pawn
+
+  black-player
+
+  black-queen
+
+  black-rook
+
+  castling-black
+
+  castling-black-kingward
+
+  castling-black-queenward
+
+  castling-white
+
+  castling-white-kingward
+
+  castling-white-queenward
+
+  chessman-colors
+
+  chessman-types
+
+  chessmen
+
+  colors
+
+  empty-square : '-'
+
+  initial-context :
+    board             : initial-board
+    player            : white
+    castlingRights    : full-castling-rts
+    passantPosition   : unset-passant-pos
+    promotionPosition : unset-promotion-pos
+    clock             : 0
+    moveNumber        : 1
+
+  full-castling-rts : 'KQkq'
+
+  king
+
+  knight
+
+  move-offsets :
+    king : [
+      [1, 1], [1, 0], [1, -1], [0, 1], [0, -1], [-1, 1], [-1, 0], [-1, -1]
+    ]
+
+    queen : [
+      [1, 1], [1, 0], [1, -1], [0, 1], [0, -1], [-1, 1], [-1, 0], [-1, -1]
+    ]
+
+    rook : [[1, 0], [0, 1], [0, -1], [-1, 0]]
+
+    bishop : [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+
+    knight : [
+      [1, 2], [1, -2], [-1, 2], [-1, -2], [2, 1], [2, -1], [-2, 1], [-2, -1]
+    ]
+
+  nbr-chessmen-per-color : 16
+
+  no-castling-rts : '-'
+
+  pawn
+
+  pawn-home-ranks :
+    black : 1
+    white : 6
+
+  piece-home-ranks :
+    black : 0
+    white : 7
+
+  piece-types
+
+  players
+
+  queen
+
+  rook
+
+  unset-passant-pos
+
+  unset-passant-pos-code
+
+  unset-promotion-pos
+
+  white
+
+  white-bishop
+
+  white-chessmen
+
+  white-king
+
+  white-knight
+
+  white-pawn
+
+  white-player
+
+  white-queen
+
+  white-rook
+
+}
+
+module.exports = constants

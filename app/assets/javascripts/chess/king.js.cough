@@ -1,0 +1,173 @@
+{ color-at, rank-of } = require './extractors'
+{ defaults }          = require './base-helpers'
+gen-pos               = require('./constructors').generate-position
+stepper-fns           = require './stepper'
+
+{
+  black
+  king
+  no-castling-rts
+  white
+} = require './constants'
+
+{
+  castling-matcher
+  empty-at?
+  file-difference
+} = require './utilities'
+
+KQ = 'KQ'
+kq = 'kq'
+K  = 'K'
+Q  = 'Q'
+k  = 'k'
+q  = 'q'
+NO = '-'
+
+no-rts = no-castling-rts
+
+king-castling-tgt-files = [2, 6]
+
+king-castling-tgts = [
+  c1 = gen-pos (7, 2)
+  g1 = gen-pos (7, 6)
+  c8 = gen-pos (0, 2)
+  g8 = gen-pos (0, 6)
+]
+
+b1 = gen-pos (7, 1)
+b8 = gen-pos (0, 1)
+
+[c1-key, g1-key, c8-key, g8-key] = king-castling-tgts.map JSON.stringify
+
+possible-rook-paths = [[5, 7], [3, 0], [61, 63], [59, 56]]
+
+rook-castling-srcs = {}
+rook-castling-srcs[c8-key] = gen-pos (0, 0)
+rook-castling-srcs[g8-key] = gen-pos (0, 7)
+rook-castling-srcs[c1-key] = gen-pos (7, 0)
+rook-castling-srcs[g1-key] = gen-pos (7, 7)
+
+rook-castling-tgts = {}
+rook-castling-tgts[c8-key] = gen-pos (0, 3)
+rook-castling-tgts[g8-key] = gen-pos (0, 5)
+rook-castling-tgts[c1-key] = gen-pos (7, 3)
+rook-castling-tgts[g1-key] = gen-pos (7, 5)
+
+t0  = []
+t1  = [c1]
+t2  = [g1]
+t12 = [c1, g1]
+t3  = [c8]
+t4  = [g8]
+t34 = [c8, g8]
+
+new-castling-rts = {}
+
+new-castling-rts[white] =
+  KQkq : kq, KQk : k, KQq : q, KQ : NO, Kkq : kq, Kk : k, Kq : q, K   : NO
+  Qkq  : kq, Qk  : k, Qq  : q, Q  : NO, kq  : kq, k  : k, q  : q, '-' : NO
+
+new-castling-rts[black] =
+  KQkq : KQ, Qkq : Q, Kkq : K, kq : NO, KQq : KQ, Qq : Q, Kq : K, q   : NO
+  KQk  : KQ, Qk  : Q, Kk  : K, k  : NO, KQ  : KQ, Q  : Q, K  : K, '-' : NO 
+
+castling-tgts = {}
+
+castling-tgts[white] =
+  KQkq : t12, KQk : t12, KQq : t12, KQ  : t12
+  Qkq  : t1,  Qk  : t1,  Qq  : t1,  Q   : t1
+  Kkq  : t2,  Kk  : t2,  Kq  : t2,  K   : t2
+  kq   : t0,  k   : t0,  q   : t0,  '-' : t0
+
+castling-tgts[black] =
+  KQkq : t34, Qkq : t34, Kkq : t34, kq  : t34
+  KQq  : t3,  Qq : t3,   Kq  : t3,  q   : t3
+  KQk  : t4,  Qk : t4,   Kk  : t4,  k   : t4
+  KQ   : t0,  Q  : t0,   K   : t0,  '-' : t0 
+
+castling-paths = {}
+castling-paths[c1-key] = [(e1 = gen-pos (7, 4)), gen-pos (7, 3), c1]
+castling-paths[g1-key] = [e1, gen-pos (7, 5), g1] 
+castling-paths[c8-key] = [(e8 = gen-pos (0, 4)), gen-pos (0, 3), c8]
+castling-paths[g8-key] = [e8, gen-pos (0, 5), g8]
+
+castling? = (src, tgt) ->
+  Math.abs (file-difference (src, tgt)) > 1
+
+castling-permitted? = (castling-rts, black?) -> \rank-diff ->
+  kingward? = rank-diff > 0
+  matcher = castling-matcher (black?, kingward?)
+  /#{matcher}/.test castling-rts
+
+get-potential-castling-moves = (bd, color, castling-rts, attackable?) ->
+
+  castling-tgts[color][castling-rts]
+      .filter (queenside-transitable? bd)
+      .filter (safe? (bd, color, attackable?))
+
+getPotentialKingAttacks = (bd, src) ->
+  king-fns.getPotentialMoves (bd, src, no-rts)
+
+modifyCastlingRights = (rts, src) ->
+  king-color = if rank-of src == 0 then black else white
+  new-castling-rts[king-color][rts]
+
+queenside-transitable? = \board \tgt ->
+  switch tgt
+    when c1 then (empty-at? board b1)
+    when c8 then (empty-at? board b8)
+    else true
+
+rook-castling-path = \king-tgt ->
+  key = JSON.stringify king-tgt
+  src = rook-castling-srcs[key]
+  tgt = rook-castling-tgts[key]
+  [src, tgt]
+
+safe? = (board, color, attackable?) -> (tgt) ->
+  key = JSON.stringify tgt
+
+  do (attackable? = attackable?.bind (null, board, color)) ->
+
+    ! (castling-paths[key].some attackable?)
+
+# ----------------
+# Mixin : Stepper
+# ----------------
+
+king-fns = defaults stepper-fns {
+  getPotentialKingAttacks
+  modifyCastlingRights
+}
+
+# --------------------------
+# Override mixin functions.
+# --------------------------
+
+castle = do (simple-move = king-fns.move) ->
+  (bd, src, tgt) ->
+    [rook-src, rook-tgt] = rook-castling-path tgt
+    bd-after-king-moves  = simple-move (bd, src) tgt
+    simple-move (bd-after-king-moves, rook-src) rook-tgt
+
+king-fns.getPotentialMoves = do (get-simple-moves = king-fns.getPotentialMoves) ->
+  (bd, src, rts, _0, _1, attackable?) ->
+    king-color  = color-at bd src
+
+    simple-moves = get-simple-moves (
+      bd, src, undefined, undefined, king)
+
+    return simple-moves if rts == no-rts
+
+    simple-moves.concat (
+      get-potential-castling-moves (bd, king-color, rts, attackable?))
+  
+king-fns.move = do (non-castling-move = king-fns.move) ->
+  (bd, src) -> \tgt ->
+    if castling? (src, tgt)
+      castle (bd, src, tgt)
+    else
+      non-castling-move (bd, src) tgt
+
+module.exports = king-fns

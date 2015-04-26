@@ -1,0 +1,221 @@
+{ defaults }       = require './base-helpers'
+{ encode-context } = require './fen-service'
+king-fns           = require './king'
+knight-fns         = require './knight'
+pawn-fns           = require './pawn'
+rook-fns           = require './rook'
+slider-fns         = require './slider'
+
+{
+  black?
+  opposing-color
+  replace
+  same-position?
+  to-2d
+} = require './utilities'
+
+{
+  chessman-positions-from
+  chessman-type-at
+  chessman-type-of
+  color-of
+  square-at
+} = require './extractors'
+
+{
+  bishop
+  black-king
+  king
+  knight
+  no-castling-rts
+  pawn
+  queen
+  rook
+  white-king
+  unset-promotion-pos
+} = require './constants'
+
+dispatch-table = {}
+dispatch-table[king  ] = king-fns
+dispatch-table[queen ] = slider-fns
+dispatch-table[rook  ] = rook-fns
+dispatch-table[bishop] = slider-fns
+dispatch-table[knight] = knight-fns
+dispatch-table[pawn  ] = pawn-fns
+
+add-msg = (ctx, msg) ->
+  (new-ctx = copy ctx).message = msg
+  new-ctx
+
+attackable? = (board, color, pos) ->
+  vuln-positions = vulnerable-positions-for (board, color)
+  contains (vuln-positions, pos)
+
+call = \fn-name \chessman-type ->
+  dispatch-table[chessman-type][fn-name]
+
+checkmate? = (bd, passant, color) ->
+  ally-positions = chessman-positions-from (bd, color)
+
+  for ally-pos in ally-positions
+    potential-moves =
+      getPotentialMoves (bd, ally-pos, no-castling-rts, passant)
+
+    for potential-mv in potential-moves
+      new-bd = move (bd, ally-pos, passant) potential-mv
+      return false unless in-check? (new-bd, color)
+
+  true
+
+contains = (potential-positions, tgt) ->
+  potential-positions.some (same-position? tgt)
+
+copy = \ctx ->
+  defaults ctx {}
+
+extract-props = \ctx ->
+  {
+    board
+    player
+    castlingRights
+    passantPosition
+    clock
+    moveNumber
+  } = ctx
+
+  [board, player, castlingRights, passantPosition, clock, moveNumber]
+
+game-completed-response = \new-ctx ->
+  add-msg (new-ctx, 'checkmate')
+
+game-continues-response = \new-ctx ->
+  add-msg (new-ctx, 'check')
+
+generate-new-ctx = (new-bd, orig-ctx, src, tgt) ->
+  [orig-bd, player, rts, pass, clock, mv-nbr] = extract-props orig-ctx
+
+  board  : new-bd
+  player : opposing-color player
+  castlingRights    : modifyCastlingRights (orig-bd, src, rts)
+  passantPosition   : setPassantPosition   (orig-bd, src, tgt)
+  promotionPosition : setPromotionPosition (orig-bd, src, tgt)
+  clock             : update-clock (clock)
+  moveNumber        : update-move-number (player, mv-nbr)
+
+getPotentialKingAttacks = (bd, src) ->
+  type = chessman-type-at bd src
+  call 'getPotentialKingAttacks' type (bd, src, type)
+
+getPotentialMoves = (bd, src, rts, passant) ->
+  type = chessman-type-at bd src
+  call 'getPotentialMoves' type (bd, src, rts, passant, type, attackable?)
+
+in-check? = (board, color) ->
+  king-pos = king-position-for (board, color)
+  attackable? (board, color, king-pos)
+
+king-position-for = (board, color) ->
+  king = if black? color then black-king else white-king
+  to-2d (board.indexOf king)
+
+king-safe-response = \new-ctx ->
+  [new-bd, opponent] = extract-props new-ctx
+  
+  if in-check? (new-bd, opponent)
+    possible-checkmate-response (new-ctx)
+  else
+    new-ctx
+
+king-unsafe-response = \ctx ->
+  add-msg (ctx, 'illegal move')
+
+modifyCastlingRights = (bd, src, rts) ->
+  type = chessman-type-at bd src
+  call 'modifyCastlingRights' type (rts, src)
+
+move = (bd, src, passant) -> \tgt ->
+  type = chessman-type-at bd src
+  call 'move' type (bd, src, passant) tgt
+
+move-illegal-response = \ctx ->
+  add-msg (ctx, 'illegal move')
+
+move-legal? = (bd, src, rts, passant) -> \tgt ->
+  type = chessman-type-at bd src
+  potential-tgts = getPotentialMoves (bd, src, rts, passant)
+  
+  contains (potential-tgts, tgt)
+
+move-legal-response = (orig-ctx, src, tgt) ->
+  [bd, player, _, passant] = extract-props orig-ctx
+
+  new-bd = move (bd, src, passant) tgt
+
+  if in-check? (new-bd, player)
+    king-unsafe-response (orig-ctx)
+  else
+    new-ctx = generate-new-ctx (new-bd, orig-ctx, src, tgt)
+    king-safe-response (new-ctx)
+
+navigate = \ctx ->
+  global.location.hash = encodeURI (encode-context ctx)
+
+possible-checkmate-response = \new-ctx ->
+  [new-bd, opponent, _, new-passant] = extract-props new-ctx
+
+  if checkmate? (new-bd, new-passant, opponent)
+    game-completed-response (new-ctx)
+  else
+    game-continues-response (new-ctx)
+
+promote = \ctx \chessman ->
+  new-board = replace (chessman, ctx.board, ctx.promotionPosition)
+  new-ctx = copy ctx
+  new-ctx.board = new-board
+  new-ctx.promotionPosition = unset-promotion-pos
+  king-safe-response new-ctx
+
+query-game-service = (ctx, src, tgt) ->
+  [bd, player, rts, passant] = extract-props ctx
+
+  if move-legal? (bd, src, rts, passant) tgt
+    move-legal-response (ctx, src, tgt)
+  else
+    move-illegal-response ctx
+
+setPassantPosition = (bd, src, tgt) ->
+  chessman = square-at bd src
+  type     = chessman-type-of chessman
+  color    = color-of chessman
+
+  call 'setPassantPosition' type (color, src, tgt)
+
+setPromotionPosition = (bd, src, tgt) ->
+  chessman = square-at bd src
+  type     = chessman-type-of chessman
+  color    = color-of chessman
+
+  call 'setPromotionPosition' type (color, tgt)
+
+update-clock = \nbr ->
+  nbr + 1
+
+update-move-number = (player, mv-nbr) ->
+  if black? player then mv-nbr + 1 else mv-nbr
+
+vulnerable-positions-for = (board, color) ->
+  foe-color     = opposing-color (color)
+  foe-positions = chessman-positions-from (board, foe-color)
+
+  get-potential-king-attacks = \pos ->
+    getPotentialKingAttacks (board, pos)
+
+  #Array.concat.apply (null, (foe-positions.map get-potential-king-attacks))
+  shallow-flatten (foe-positions.map get-potential-king-attacks)
+
+game-service = {
+  promote
+  query-game-service
+}
+
+module.exports = game-service

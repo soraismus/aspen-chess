@@ -1,0 +1,66 @@
+{ color-at, rank-&-file-from }                   = require './extractors'
+{ defaults }                                     = require './base-helpers'
+{ empty-at?, inessent?, offsets-for, opponent? } = require './utilities'
+{ generate-position! }                           = require './constructors'
+piece-fns                                        = require './piece'
+
+accumulate-till-blocked = (board, color1) -> (rank, file, dir) ->
+  possible-moves = []
+
+  [rank-diff, file-diff] = rank-&-file-from dir
+
+  gen-pos   = generate-position!
+  inessent? = inessent?
+  empty-at? = empty-at? board
+  color-at  = color-at board
+
+  loop
+    [rank, file] = [rank + rank-diff, file + file-diff]
+
+    new-pos = gen-pos (rank, file)
+
+    break unless inessent? new-pos
+
+    if empty-at? new-pos
+      possible-moves.push new-pos
+    else
+      color2 = color-at new-pos
+      possible-moves.push new-pos if opponent? ([color1, color2])
+      break
+
+  possible-moves
+
+getPotentialKingAttacks = (bd, src, type) ->
+  getPotentialMoves (bd, src, undefined, undefined, type)
+
+get-potential-moves = (board, src, chessman-type) ->
+  potential-moves = []
+  offsets         = offsets-for chessman-type
+  color           = color-at board src
+  accumulate      = accumulate-till-blocked (board, color)
+  [rank, file]    = rank-&-file-from src
+
+  for dir in offsets
+    potential-moves = potential-moves.concat (accumulate (rank, file, dir))
+
+  potential-moves
+
+getPotentialMoves = (bd, src, rts, passant, type) ->
+  offsets     = offsets-for type
+  color       = color-at bd src
+  accumulate  = accumulate-till-blocked (bd, color)
+  [rank, file] = rank-&-file-from src
+
+  moves = []
+
+  for dir in offsets
+    moves = moves.concat (accumulate (rank, file, dir))
+
+  moves
+
+slider-fns = defaults piece-fns {
+  getPotentialKingAttacks
+  getPotentialMoves
+}
+
+module.exports = slider-fns

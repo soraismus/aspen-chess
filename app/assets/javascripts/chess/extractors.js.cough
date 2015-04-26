@@ -1,0 +1,121 @@
+{
+  absent-color
+  bishop
+  black-bishop
+  black-king
+  black-knight
+  black-pawn
+  black-queen
+  black-rook
+  king
+  knight
+  pawn
+  queen
+  rook
+  white
+} = require './constants'
+
+{
+  black?
+  to-black
+  white?
+} = require './base-helpers'
+
+type-of = {}
+type-of[black-king  ] = king
+type-of[black-queen ] = queen
+type-of[black-rook  ] = rook
+type-of[black-bishop] = bishop
+type-of[black-knight] = knight
+type-of[black-pawn  ] = pawn
+
+# -----------------
+# Helper Functions
+# -----------------
+
+to-1d = \pos ->
+  rank = rank-of pos
+  file = file-of pos
+  8 * rank + file
+
+# No assertions b/c #opponent-mated? encounters indices < 0 or > 63.
+to-2d = \idx -> [Math.floor (idx / 8), idx % 8]
+
+corresponding-black-chessman = \chessman ->
+  if (white? chessman) then (to-black chessman) else chessman
+
+of-color? = \color \square ->
+  color == color-of square
+
+# -----------
+# Extractors
+# -----------
+
+chessman-positions-from = (board, color) ->
+  i = -1
+  split-board = board.split ''
+  positions = []
+
+  get-pos = \color ->
+    color-pred = of-color? color
+
+    \sq ->
+      i += 1
+      positions.push (to-2d i) if color-pred sq
+
+  split-board.forEach (get-pos color)
+
+  positions
+
+chessman-type-at = \board \pos ->
+  chessman-type-of (square-at board pos)
+
+chessman-type-of = \chessman ->
+  abbrev = corresponding-black-chessman chessman
+  type-of[abbrev]
+
+color-at = \board \pos ->
+  color-of (square-at board pos)
+
+color-of = \square ->
+  switch
+    when (black? square) then black
+    when (white? square) then white
+    else absent-color
+
+colors-at = \board \positions ->
+  positions.map (color-at board)
+
+file-of = ([rank, file]) ->
+  file
+
+promotion-position-from = \ctx ->
+  ctx.promotionPosition
+
+rank-&-file-from = \val ->
+  val
+
+rank-of = ([rank, file]) ->
+  rank
+
+square-at = \board \pos ->
+  board[to-1d pos]
+
+extractors = {
+  chessman-positions-from
+  chessman-type-at
+  chessman-type-of
+  corresponding-black-chessman
+  color-at
+  color-of
+  colors-at
+  file-of
+  promotion-position-from
+  rank-&-file-from
+  rank-of
+  square-at
+  to-1d
+  to-2d
+}
+
+module.exports = extractors

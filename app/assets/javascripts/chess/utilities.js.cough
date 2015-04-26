@@ -1,0 +1,108 @@
+{ empty?, inessent? } = require './types'
+
+{
+  absent-color
+  black
+  move-offsets
+  unset-passant-pos
+  unset-promotion-pos
+  white
+} = require './constants'
+
+{
+  color-at
+  colors-at
+  file-of
+  rank-of
+  square-at
+  to-1d
+  to-2d
+} = require './extractors'
+
+available? = (board, pos1) -> \pos2 ->
+  empty-at? board pos2 || do ->
+    color-pair = colors-at board [pos1, pos2]
+    opponent? color-pair
+
+black? = \color ->
+  color == black
+
+color-absent? = \color ->
+  color == absent-color
+
+empty? = \square ->
+  empty? square
+
+empty-at? = \board \pos ->
+  empty? (square-at board pos)
+
+# WET; c.f. `file-difference`.
+rank-difference = (src, tgt) ->
+  (rank-of tgt) - (rank-of src)
+
+file-difference = (src, tgt) ->
+  (file-of tgt) - (file-of src)
+
+# No assertions b/c #inessent? is fundamental
+# to the defintion of the 'position' type.
+inessent? = \pos ->
+  inessent? pos
+
+occupied? = \square ->
+  ! (empty? square)
+
+offsets-for = \chessman-type ->
+  move-offsets[chessman-type]
+
+opponent? = ([color1, color2]) ->
+  color2 != absent-color &&
+      color2 != color1 &&
+      color1 != absent-color
+
+opponent-at? = (board, pos1) -> \pos2 ->
+  opponent? ([pos1, pos2].map (color-at board))
+
+opposing-color = \active-color ->
+  if black? active-color then white else black
+
+passant-position-set? = \passant-position ->
+  ! (passant-position-unset? passant-position)
+
+passant-position-unset? = \passant-position ->
+  passant-position == unset-passant-pos
+
+promotion-position-set? = \promotion-position ->
+  promotion-position != unset-promotion-pos
+
+rank-difference = (src, tgt) ->
+  (rank-of tgt) - (rank-of src)
+
+replace = (square, board, pos) ->
+  idx = to-1d pos
+  "#{board.slice (0, idx)}#{square}#{board.slice (idx + 1)}"
+
+same-position? = \pos1 \pos2 ->
+  passant-position-set? pos1 &&
+      pos1[0] == pos2[0] &&
+      pos1[1] == pos2[1]
+
+utilities = {
+  available?
+  black?
+  color-absent?
+  empty-at?
+  file-difference
+  inessent?
+  occupied?
+  offsets-for
+  opponent?
+  opposing-color
+  passant-position-unset?
+  promotion-position-set?
+  rank-difference
+  replace
+  same-position?
+  to-2d
+}
+
+module.exports = utilities

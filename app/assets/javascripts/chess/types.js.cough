@@ -1,0 +1,171 @@
+{
+  black
+  chessman-types
+  colors
+  empty-square
+  unset-passant-pos
+  unset-passant-pos-code
+  unset-promotion-pos
+} = require './constants'
+
+# -------------------------
+# Private Helper Functions
+# -------------------------
+
+boolean? = \val ->
+  val == true || val == false
+
+hash? = \val ->
+  javascript-type? ('Object', val)
+
+javascript-type? = (type, val) ->
+  toString.call val == '[object ' + type + ']'
+
+integer? = \val ->
+  val == val >> 0
+
+non-negative-integral-string? = \digit-as-string ->
+  intg = Number.parseInt (digit-as-string, 10)
+  intg == intg >>> 0
+
+# ------------------------
+# Public Helper Functions
+# ------------------------
+
+bounded? = \val ->
+  val >= 0 && val <= 7 && ! (boolean? val)
+
+empty? = \square ->
+  square == empty-square
+
+inessent? = \pos ->
+  pos.every bounded?
+
+non-negative-integer? = \val ->
+  val == val >>> 0
+
+string? = \val ->
+  javascript-type? ('String', val)
+
+undefined? = \val ->
+  val == undefined
+
+# -----------------------
+# Classifying Predicates
+# -----------------------
+
+black? = \color ->
+  color == black
+
+board? = \val ->
+  /^[kqrbnp-]{64,64}$/i.test  val
+
+castling-right? = \val ->
+  /^[KQkq]$/.test val
+
+castling-right-set? = \val ->
+  /(^-$)|(^K?Q?k?q?$)/.test val
+
+chessman? = \val ->
+  /^[kqrbnp]$/i.test val
+
+chessman-type? = \val ->
+  chessman-types.some (\type -> type == val)
+
+color? = \val ->
+  colors.some (\color -> color == val)
+
+color-pair? = \val ->
+  pair? val && val.every color?
+
+context? = \val ->
+  hash? val &&
+    board? val.board &&
+    color? val.player &&
+    castling-right-set? val.castlingRights &&
+    passant-position? val.passantPosition
+
+fen? = \val ->
+  string? val && do (slots = val.split ' ') ->
+      fen-board? slots[0] &&
+      color? slots[1] &&
+      castling-right-set? slots[2] &&
+      passant-position-code? slots[3] &&
+      non-negative-integral-string? slots[4] &&
+      non-negative-integral-string? slots[5]
+
+fen-board? = \val ->
+  /^([kqrbnp\d]{1,8}\/){1,7}[kqrbnp\d]{1,8}$/i.test val
+
+integral-pair? = \val ->
+  pair? val && val.every integer?
+
+pair? = \val ->
+  Array.isArray val && val.length == 2
+
+passant-position? = \pos ->
+  unset-passant-position? pos || position? pos
+
+passant-position-code? = \code ->
+  unset-passant-position-code? code || position-code? code
+
+pawn-direction? = \val ->
+  val == 1 || val == -1
+
+position? = \val ->
+  integral-pair? val && inessent? val
+
+position-code? = \val ->
+  /^[a-h][1-8]$/.test val
+
+position-component? = \val ->
+  bounded? val && integer? val
+
+promotion-position? = \pos ->
+  unset-promotion-position? pos || position? pos
+
+square? = \val ->
+  chessman? val || empty? val
+
+unset-passant-position? = \val ->
+  val == unset-passant-pos
+
+unset-passant-position-code? = \val ->
+  val == unset-passant-pos-code
+
+unset-promotion-position? = \val ->
+  val == unset-promotion-pos
+
+types = {
+  black?
+  board?
+  bounded?
+  castling-right?
+  castling-right-set?
+  chessman?
+  chessman-type?
+  color?
+  color-pair?
+  context?
+  fen?
+  fen-board?
+  empty?
+  inessent?
+  integral-pair?
+  non-negative-integer?
+  passant-position?
+  passant-position-code?
+  promotion-position?
+  pawn-direction?
+  position?
+  position-code?
+  position-component?
+  square?
+  string?
+  undefined?
+  unset-passant-position?
+  unset-passant-position-code?
+}
+
+# Many of these types were only used by the now-defunct assertions file.
+module.exports = types

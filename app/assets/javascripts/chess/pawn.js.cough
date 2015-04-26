@@ -1,0 +1,162 @@
+chessman-fns                              = require './chessman'
+{ color-at, rank-&-file-from }            = require './extractors'
+{ defaults }                              = require './base-helpers'
+{ generate-position, generate-position! } = require './constructors'
+
+{
+  black
+  empty-square
+  unset-passant-pos
+  unset-promotion-pos
+  white
+} = require './constants'
+
+{
+  color-absent?
+  inessent?
+  opponent?
+  passant-position-unset?
+  rank-difference
+  replace
+  same-position?
+} = require './utilities'
+
+home-ranks = {}
+home-ranks[black] = 1
+home-ranks[white] = 6
+
+directions = {}
+directions[black] = 1
+directions[white] = -1
+
+promotion-ranks = {}
+promotion-ranks[black] = 7
+promotion-ranks[white] = 0
+
+advancing-2-squares? = (src, tgt) ->
+  Math.abs (rank-difference (src, tgt)) > 1
+
+at-home-rank? = (color, rank) ->
+  home-ranks[color] == rank
+
+at-promotion-rank? = (color, rank) ->
+  promotion-ranks[color] == rank
+
+behind = (dir, position) ->
+  dir = -1 * dir
+  [rank, file] = rank-&-file-from position
+
+  [rank + dir, file]
+
+delete-passant-if-enpassant-capture = (bd, color, set-passant, tgt) ->
+  if same-position? tgt set-passant
+    delete-passed-pawn (bd, color, set-passant)
+  else
+    bd
+
+delete-passed-pawn = (board, color, passant) ->
+  direction = direction-for color
+  replace (empty-square, board, behind (direction, passant))
+
+direction-for = \color ->
+  directions[color]
+
+get-diagonal-positions = (rank, file, dir) ->
+  gen-pos = generate-position!.bind (null, rank + dir)
+  ([file - 1, file + 1].map gen-pos).filter inessent?
+
+get-diag-attacks = (board, rank, file, color, dir, passant) ->
+  foe-present? = \pos -> opponent? [color, color-at pos]
+  passant?     = same-position? passant
+  available?   = \val -> foe-present? val || passant? val
+  color-at     = color-at board
+  diag-attacks = get-diagonal-positions (rank, file, dir)
+  
+  diag-attacks.filter available?
+
+get-fwd-moves = (board, rank, file, color, dir) ->
+  fwd-moves  = []
+  tgt1       = generate-position (rank + dir, file)
+  tgt1-color = color-at board tgt1
+
+  return fwd-moves unless color-absent? tgt1-color
+
+  fwd-moves.push tgt1
+
+  return fwd-moves unless at-home-rank? (color, rank)
+
+  # Because, for the vast majority of the game, pawns may
+  # only advance one square, 'generate-position',
+  # 'color-at board', and 'color-absent?' are not memoized
+  # with local variables.
+
+  tgt2       = generate-position (rank + 2 * dir, file)
+  tgt2-color = color-at board tgt2
+
+  return fwd-moves unless color-absent? tgt2-color
+
+  fwd-moves.push tgt2
+
+  return fwd-moves
+
+getPotentialKingAttacks = (bd, src) ->
+  color = color-at bd src
+
+  [rank, file]   = rank-&-file-from src
+  pawn-direction = direction-for color
+
+  get-diagonal-positions (rank, file, pawn-direction)
+
+getPotentialMoves = (bd, src, rts, passant) ->
+  color = color-at bd src
+  [rank, file] = rank-&-file-from src
+  dir = direction-for color
+
+  #moves = ArrayProto.concat.call (
+  moves = nativeConcat.call (
+    get-fwd-moves    (bd, rank, file, color, dir)
+    get-diag-attacks (bd, rank, file, color, dir, passant)
+  )
+
+  moves.filter inessent?
+
+setPassantPosition = (pawn-color, src, tgt) ->
+  if advancing-2-squares? (src, tgt)
+    dir = direction-for pawn-color
+    behind (dir, tgt)
+  else
+    unset-passant-pos
+
+setPromotionPosition = (pawn-color, tgt) ->
+  [tgt-rank] = rank-&-file-from tgt
+
+  if at-promotion-rank? (pawn-color, tgt-rank)
+    tgt
+  else
+    unset-promotion-pos
+
+# ----------------
+# Mixin : Chessman
+# ----------------
+
+pawn-fns = defaults chessman-fns {
+  getPotentialKingAttacks
+  getPotentialMoves
+  setPassantPosition
+  setPromotionPosition
+}
+
+# --------------------------
+# Override mixin functions.
+# --------------------------
+
+pawn-fns.move = do (simple-move = pawn-fns.move) ->
+  (bd, src, passant) -> \tgt ->
+    bd-after-basic-move = simple-move (bd, src) tgt
+
+    return bd-after-basic-move if passant-position-unset? passant
+
+    delete-passant-if-enpassant-capture (
+      bd-after-basic-move, (color-at bd src), passant, tgt)
+
+module.exports = pawn-fns

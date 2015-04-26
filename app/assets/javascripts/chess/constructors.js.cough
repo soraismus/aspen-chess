@@ -1,0 +1,48 @@
+{ black? }   = require './types'
+{ to-white } = require './base-helpers'
+
+{
+  bishop
+  black-bishop
+  black-king
+  black-knight
+  black-pawn
+  black-queen
+  black-rook
+  king
+  knight
+  pawn
+  queen
+  rook
+} = require './constants'
+
+black-chessman-from = {}
+black-chessman-from[king  ] = black-king
+black-chessman-from[queen ] = black-queen
+black-chessman-from[rook  ] = black-rook
+black-chessman-from[bishop] = black-bishop
+black-chessman-from[knight] = black-knight
+black-chessman-from[pawn  ] = black-pawn
+
+generate-chessman = (chessman-type, color) ->
+  black-chessman = black-chessman-from[chessman-type]
+  if (black? color) then black-chessman else (to-white black-chessman)
+
+generate-context =
+  (board, player, castlingRights, passantPosition, clock, moveNumber) ->
+    { board, player, castlingRights, passantPosition, clock, moveNumber }
+
+generate-position = (rank, file) ->
+  generate-position! (rank, file)
+
+generate-position! = (rank, file) ->
+  [rank, file]
+
+constructors = {
+  generate-chessman
+  generate-context
+  generate-position
+  generate-position!
+} 
+
+module.exports = constructors
