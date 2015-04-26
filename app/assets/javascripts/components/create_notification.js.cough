@@ -1,0 +1,31 @@
+{ div, p }             = require './DOM'
+createNotificationLink = require './create_notification_link'
+
+getKey = \index ->
+  "note_#{index}"
+
+createNotification = (notification, index) ->
+  { id, links, message } = notification
+
+  div
+    className : 'notification'
+    id        : id
+    key       : getKey index
+    p
+      irrelevant : null
+      message
+    links.map createNotificationLink
+
+###
+# Notification is mappable.
+Notification = (notification, index) ->
+  { id, links, message } = notification
+
+  div (
+    { id, key: (key index), className: 'notification' }
+    _p message
+    (fmap-w/-key NotificationLink links)
+  )
+###
+
+module.exports = createNotification

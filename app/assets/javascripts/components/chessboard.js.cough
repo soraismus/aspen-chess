@@ -1,31 +1,9 @@
-# require ../utilities2
-# require ../chessplay/extractors
-# require ../chessplay/utilities
+{ black?, occupied? }   = require '../chess/utilities'
+{ color-of, square-at } = require '../chess/extractors'
+{ img, table, td, tr }  = require './DOM'
+{ white }               = require '../chess/constants'
 
-# ChessApp
-
-# img
-# table
-# td
-# tr
-
-# --------
-# imports
-# --------
-
-# `white` has two sources: `chessplay.utilities` and `ChessApp`.
-{ img, extractors, table, td, tr, utilities, white } = ChessApp
-{ constants, extractors, utilities } = chessplay
-
-square-at = extractors.square-at
-color-of = extractors.color-of
-black? = utilities.black? 
-occupied? = utilities.occupied?
-type-at = extractors.corresponding-black-chessman
-
-# ----- 
-# main
-# -----
+type-at = require('../chess/extractors').corresponding-black-chessman
 
 # Initial, default settings.
 active-color       = white
@@ -36,7 +14,7 @@ active? = \color ->
   color == active-color && color == current-user-color
 
 add-chessboard = \board ->
-  ranks = fmap (add-rank board) (get-indices ())
+  ranks = get-indices().map(add-rank(board))
   table
     className : 'board'
     ranks
@@ -47,7 +25,7 @@ add-chessman = (color, type, rank, file) ->
     src       : src-for (color, type)
 
 add-rank = \board \rank ->
-  squares = fmap (add-square (board, rank)) (get-indices ())
+  squares = get-indices().map(add-square(board, rank))
   tr
     className : 'rank'
     key       : rank-key rank
@@ -63,9 +41,9 @@ add-square = (board, rank) -> (file) ->
 
 Chessboard = \env ->
   current-user-color = env.color
-  orientation = env.orientation
-  context = env.context
-  active-color = context.player
+  orientation        = env.orientation
+  context            = env.context
+  active-color       = context.player
 
   add-chessboard context.board
 
@@ -90,6 +68,13 @@ chessman-on = (square, rank, file) ->
 
 get-indices = ->
   if black? orientation then [7..0] else [0..7]
+
+get-classname = (klasses) ->
+  # Assert: non-array-object? klasses
+  result = ''
+  for own klass, true? of klasses
+    result += "#{klass} " if true?
+  result.trim ()
 
 rank-key = \rank ->
   "rank-#{rank}"

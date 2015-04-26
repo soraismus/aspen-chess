@@ -1,17 +1,26 @@
-{ div }    = require('react').DOM
-# _h1
-Pagination = require './pagination'
-UserList   = require './user_list'
+{ div, h1 } = require './DOM'
+# Pagination  = require './pagination'
+# UserList    = require './user_list'
 
 UserDisplay = \props ->
   { pagination, user_list } = props
 
-  div (
-    { id: 'main-container' } # Bootstrap aspect.
-    _h1 'All Users'
+  div
+    id : 'main-container' # Bootstrap aspect.
+    h1
+      irrelevant : null
+      'All Users'
+
+###
+UserDisplay = \props ->
+  { pagination, user_list } = props
+
+  div
+    id : 'main-container' # Bootstrap aspect.
+    h1 (null, 'All Users')
     Pagination pagination
     UserList user_list
     Pagination pagination
-  )
+###
 
 module.exports = UserDisplay

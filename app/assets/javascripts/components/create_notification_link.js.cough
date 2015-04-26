@@ -1,0 +1,20 @@
+# __a
+
+{ a, p } = require './DOM'
+
+label = 'Notification'
+
+createNotificationLink = (props, index) ->
+  { text } = props
+  p
+    key : "link-#{index}"
+    a (props, text)
+
+###
+# NotificationLink is mapped.
+NotificationLink = (props, index) ->
+  { text } = props
+  _p (__a { label, index: text } (delete-component ('text', props), text))
+###
+
+module.exports = createNotificationLink

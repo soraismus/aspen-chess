@@ -1,8 +1,10 @@
-Chessboard      = require './chessboard'
-# _div
-PromOptsDisplay = require './promotion_options_display'
+Chessboard = require './chessboard'
+{ div }    = require './DOM'
+
+# PromOptsDisplay = require './promotion_options_display'
 # sensitize
 
+###
 DEFAULT-PROMOTION-POSITION = '-'
 
 configure-chess-display = \env ->
@@ -17,5 +19,11 @@ configure-chess-display = \env ->
 # Usage: (label/capsule) -> (factory) -> (args...) -> ...
 # TODO: Change injectable-factory label.
 ChessDisplay = sensitize 'ChessDisplay' configure-chess-display
+###
+
+ChessDisplay = \env ->
+  div
+    irrelevant : null
+    Chessboard env
 
 module.exports = ChessDisplay

@@ -1,19 +1,19 @@
-# ChessDisplay
-# Notification
-# UserDisplay
+ChessDisplay       = require './chess_display'
+createNotification = require './create_notification'
+{ div }            = require './DOM'
+UserDisplay        = require './user_display'
 
-createNotification = Notification
-
-SignedIn = \props ->
+LoggedIn = \props ->
   { chess, notifications, playing, user_display } = props
-  { color, context, orientation } = chess
+
+  # { color, context, orientation } = chess
 
   if playing
     ChessDisplay chess
   else
-    _div (
+    div
+      irrelevant : null
       UserDisplay user_display
       notifications.map createNotification
-    )
 
-module.exports = SignedIn
+module.exports = LoggedIn
