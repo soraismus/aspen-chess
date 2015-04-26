@@ -1,13 +1,13 @@
 {
-  absent-color
+  absentColor
   bishop
   black
-  black-bishop
-  black-king
-  black-knight
-  black-pawn
-  black-queen
-  black-rook
+  blackBishop
+  blackKing
+  blackKnight
+  blackPawn
+  blackQueen
+  blackRook
   king
   knight
   pawn
@@ -18,105 +18,105 @@
 
 {
   black?
-  to-black
+  toBlack
   white?
 } = require './base-helpers'
 
-type-of = {}
-type-of[black-king  ] = king
-type-of[black-queen ] = queen
-type-of[black-rook  ] = rook
-type-of[black-bishop] = bishop
-type-of[black-knight] = knight
-type-of[black-pawn  ] = pawn
+typeOf = {}
+typeOf[blackKing  ] = king
+typeOf[blackQueen ] = queen
+typeOf[blackRook  ] = rook
+typeOf[blackBishop] = bishop
+typeOf[blackKnight] = knight
+typeOf[blackPawn  ] = pawn
 
 # -----------------
 # Helper Functions
 # -----------------
 
-to-1d = \pos ->
-  rank = rank-of pos
-  file = file-of pos
+to_1d = \pos ->
+  rank = rankOf pos
+  file = fileOf pos
   8 * rank + file
 
-# No assertions b/c #opponent-mated? encounters indices < 0 or > 63.
-to-2d = \idx -> [Math.floor (idx / 8), idx % 8]
+# No assertions b/c #opponentMated? encounters indices < 0 or > 63.
+to_2d = \idx -> [Math.floor (idx / 8), idx % 8]
 
-corresponding-black-chessman = \chessman ->
-  if (white? chessman) then (to-black chessman) else chessman
+correspondingBlackChessman = \chessman ->
+  if (white? chessman) then (toBlack chessman) else chessman
 
-of-color? = \color \square ->
-  color == color-of square
+ofColor? = \color \square ->
+  color == colorOf square
 
 # -----------
 # Extractors
 # -----------
 
-chessman-positions-from = (board, color) ->
+chessmanPositionsFrom = (board, color) ->
   i = -1
-  split-board = board.split ''
+  splitBoard = board.split ''
   positions = []
 
-  get-pos = \color ->
-    color-pred = of-color? color
+  getPos = \color ->
+    colorPred = ofColor? color
 
     \sq ->
       i += 1
-      positions.push (to-2d i) if color-pred sq
+      positions.push (to_2d i) if colorPred sq
 
-  split-board.forEach (get-pos color)
+  splitBoard.forEach (getPos color)
 
   positions
 
-chessman-type-at = \board \pos ->
-  chessman-type-of (square-at board pos)
+chessmanTypeAt = \board \pos ->
+  chessmanTypeOf (squareAt board pos)
 
-chessman-type-of = \chessman ->
-  abbrev = corresponding-black-chessman chessman
-  type-of[abbrev]
+chessmanTypeOf = \chessman ->
+  abbrev = correspondingBlackChessman chessman
+  typeOf[abbrev]
 
-color-at = \board \pos ->
-  color-of (square-at board pos)
+colorAt = \board \pos ->
+  colorOf (squareAt board pos)
 
-color-of = \square ->
+colorOf = \square ->
   switch
     when (black? square) then black
     when (white? square) then white
-    else absent-color
+    else absentColor
 
-colors-at = \board \positions ->
-  positions.map (color-at board)
+colorsAt = \board \positions ->
+  positions.map (colorAt board)
 
-file-of = ([rank, file]) ->
+fileOf = ([rank, file]) ->
   file
 
-promotion-position-from = \ctx ->
+promotionPositionFrom = \ctx ->
   ctx.promotionPosition
 
-rank-&-file-from = \val ->
+rank_&_file_from = \val ->
   val
 
-rank-of = ([rank, file]) ->
+rankOf = ([rank, file]) ->
   rank
 
-square-at = \board \pos ->
-  board[to-1d pos]
+squareAt = \board \pos ->
+  board[to_1d pos]
 
 extractors = {
-  chessman-positions-from
-  chessman-type-at
-  chessman-type-of
-  corresponding-black-chessman
-  color-at
-  color-of
-  colors-at
-  file-of
-  promotion-position-from
-  rank-&-file-from
-  rank-of
-  square-at
-  to-1d
-  to-2d
+  chessmanPositionsFrom
+  chessmanTypeAt
+  chessmanTypeOf
+  correspondingBlackChessman
+  colorAt
+  colorOf
+  colorsAt
+  fileOf
+  promotionPositionFrom
+  rank_&_file_from
+  rankOf
+  squareAt
+  to_1d
+  to_2d
 }
 
 module.exports = extractors

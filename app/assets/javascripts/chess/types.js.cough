@@ -1,11 +1,11 @@
 {
   black
-  chessman-types
+  chessmanTypes
   colors
-  empty-square
-  unset-passant-pos
-  unset-passant-pos-code
-  unset-promotion-pos
+  emptySquare
+  unsetPassantPos
+  unsetPassantPosCode
+  unsetPromotionPos
 } = require './constants'
 
 # -------------------------
@@ -16,16 +16,16 @@ boolean? = \val ->
   val == true || val == false
 
 hash? = \val ->
-  javascript-type? ('Object', val)
+  javascriptType? ('Object', val)
 
-javascript-type? = (type, val) ->
+javascriptType? = (type, val) ->
   toString.call val == '[object ' + type + ']'
 
 integer? = \val ->
   val == val >> 0
 
-non-negative-integral-string? = \digit-as-string ->
-  intg = Number.parseInt (digit-as-string, 10)
+nonNegativeIntegralString? = \digitAsString ->
+  intg = Number.parseInt (digitAsString, 10)
   intg == intg >>> 0
 
 # ------------------------
@@ -36,16 +36,16 @@ bounded? = \val ->
   val >= 0 && val <= 7 && ! (boolean? val)
 
 empty? = \square ->
-  square == empty-square
+  square == emptySquare
 
 inessent? = \pos ->
   pos.every bounded?
 
-non-negative-integer? = \val ->
+nonNegativeInteger? = \val ->
   val == val >>> 0
 
 string? = \val ->
-  javascript-type? ('String', val)
+  javascriptType? ('String', val)
 
 undefined? = \val ->
   val == undefined
@@ -60,112 +60,112 @@ black? = \color ->
 board? = \val ->
   /^[kqrbnp-]{64,64}$/i.test  val
 
-castling-right? = \val ->
+castlingRight? = \val ->
   /^[KQkq]$/.test val
 
-castling-right-set? = \val ->
+castlingRightSet? = \val ->
   /(^-$)|(^K?Q?k?q?$)/.test val
 
 chessman? = \val ->
   /^[kqrbnp]$/i.test val
 
-chessman-type? = \val ->
-  chessman-types.some (\type -> type == val)
+chessmanType? = \val ->
+  chessmanTypes.some (\type -> type == val)
 
 color? = \val ->
   colors.some (\color -> color == val)
 
-color-pair? = \val ->
+colorPair? = \val ->
   pair? val && val.every color?
 
 context? = \val ->
   hash? val &&
     board? val.board &&
     color? val.player &&
-    castling-right-set? val.castlingRights &&
-    passant-position? val.passantPosition
+    castlingRightSet? val.castlingRights &&
+    passantPosition? val.passantPosition
 
 fen? = \val ->
   string? val && do (slots = val.split ' ') ->
-      fen-board? slots[0] &&
+      fenBoard? slots[0] &&
       color? slots[1] &&
-      castling-right-set? slots[2] &&
-      passant-position-code? slots[3] &&
-      non-negative-integral-string? slots[4] &&
-      non-negative-integral-string? slots[5]
+      castlingRightSet? slots[2] &&
+      passantPositionCode? slots[3] &&
+      nonNegativeIntegralString? slots[4] &&
+      nonNegativeIntegralString? slots[5]
 
-fen-board? = \val ->
+fenBoard? = \val ->
   /^([kqrbnp\d]{1,8}\/){1,7}[kqrbnp\d]{1,8}$/i.test val
 
-integral-pair? = \val ->
+integralPair? = \val ->
   pair? val && val.every integer?
 
 pair? = \val ->
   Array.isArray val && val.length == 2
 
-passant-position? = \pos ->
-  unset-passant-position? pos || position? pos
+passantPosition? = \pos ->
+  unsetPassantPosition? pos || position? pos
 
-passant-position-code? = \code ->
-  unset-passant-position-code? code || position-code? code
+passantPositionCode? = \code ->
+  unsetPassantPositionCode? code || positionCode? code
 
-pawn-direction? = \val ->
+pawnDirection? = \val ->
   val == 1 || val == -1
 
 position? = \val ->
-  integral-pair? val && inessent? val
+  integralPair? val && inessent? val
 
-position-code? = \val ->
+positionCode? = \val ->
   /^[a-h][1-8]$/.test val
 
-position-component? = \val ->
+positionComponent? = \val ->
   bounded? val && integer? val
 
-promotion-position? = \pos ->
-  unset-promotion-position? pos || position? pos
+promotionPosition? = \pos ->
+  unsetPromotionPosition? pos || position? pos
 
 square? = \val ->
   chessman? val || empty? val
 
-unset-passant-position? = \val ->
-  val == unset-passant-pos
+unsetPassantPosition? = \val ->
+  val == unsetPassantPos
 
-unset-passant-position-code? = \val ->
-  val == unset-passant-pos-code
+unsetPassantPositionCode? = \val ->
+  val == unsetPassantPosCode
 
-unset-promotion-position? = \val ->
-  val == unset-promotion-pos
+unsetPromotionPosition? = \val ->
+  val == unsetPromotionPos
 
 types = {
   black?
   board?
   bounded?
-  castling-right?
-  castling-right-set?
+  castlingRight?
+  castlingRightSet?
   chessman?
-  chessman-type?
+  chessmanType?
   color?
-  color-pair?
+  colorPair?
   context?
   fen?
-  fen-board?
+  fenBoard?
   empty?
   inessent?
-  integral-pair?
-  non-negative-integer?
-  passant-position?
-  passant-position-code?
-  promotion-position?
-  pawn-direction?
+  integralPair?
+  nonNegativeInteger?
+  passantPosition?
+  passantPositionCode?
+  promotionPosition?
+  pawnDirection?
   position?
-  position-code?
-  position-component?
+  positionCode?
+  positionComponent?
   square?
   string?
   undefined?
-  unset-passant-position?
-  unset-passant-position-code?
+  unsetPassantPosition?
+  unsetPassantPositionCode?
 }
 
-# Many of these types were only used by the now-defunct assertions file.
+# Many of these types were only used by the nowDefunct assertions file.
 module.exports = types

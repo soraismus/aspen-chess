@@ -1,19 +1,19 @@
-{ color-at, rank-of } = require './extractors'
-{ defaults }          = require './base-helpers'
-gen-pos               = require('./constructors').generate-position
-stepper-fns           = require './stepper'
+{ colorAt, rankOf } = require './extractors'
+{ defaults }        = require './base-helpers'
+genPos              = require('./constructors').generatePosition
+stepperFns          = require './stepper'
 
 {
   black
   king
-  no-castling-rts
+  noCastlingRts
   white
 } = require './constants'
 
 {
-  castling-matcher
-  empty-at?
-  file-difference
+  castlingMatcher
+  emptyAt?
+  fileDifference
 } = require './utilities'
 
 KQ = 'KQ'
@@ -24,35 +24,35 @@ k  = 'k'
 q  = 'q'
 NO = '-'
 
-no-rts = no-castling-rts
+noRts = noCastlingRts
 
-king-castling-tgt-files = [2, 6]
+kingCastlingTgtFiles = [2, 6]
 
-king-castling-tgts = [
-  c1 = gen-pos (7, 2)
-  g1 = gen-pos (7, 6)
-  c8 = gen-pos (0, 2)
-  g8 = gen-pos (0, 6)
+kingCastlingTgts = [
+  c1 = genPos (7, 2)
+  g1 = genPos (7, 6)
+  c8 = genPos (0, 2)
+  g8 = genPos (0, 6)
 ]
 
-b1 = gen-pos (7, 1)
-b8 = gen-pos (0, 1)
+b1 = genPos (7, 1)
+b8 = genPos (0, 1)
 
-[c1-key, g1-key, c8-key, g8-key] = king-castling-tgts.map JSON.stringify
+[c1Key, g1Key, c8Key, g8Key] = kingCastlingTgts.map JSON.stringify
 
-possible-rook-paths = [[5, 7], [3, 0], [61, 63], [59, 56]]
+possibleRookPaths = [[5, 7], [3, 0], [61, 63], [59, 56]]
 
-rook-castling-srcs = {}
-rook-castling-srcs[c8-key] = gen-pos (0, 0)
-rook-castling-srcs[g8-key] = gen-pos (0, 7)
-rook-castling-srcs[c1-key] = gen-pos (7, 0)
-rook-castling-srcs[g1-key] = gen-pos (7, 7)
+rookCastlingSrcs = {}
+rookCastlingSrcs[c8Key] = genPos (0, 0)
+rookCastlingSrcs[g8Key] = genPos (0, 7)
+rookCastlingSrcs[c1Key] = genPos (7, 0)
+rookCastlingSrcs[g1Key] = genPos (7, 7)
 
-rook-castling-tgts = {}
-rook-castling-tgts[c8-key] = gen-pos (0, 3)
-rook-castling-tgts[g8-key] = gen-pos (0, 5)
-rook-castling-tgts[c1-key] = gen-pos (7, 3)
-rook-castling-tgts[g1-key] = gen-pos (7, 5)
+rookCastlingTgts = {}
+rookCastlingTgts[c8Key] = genPos (0, 3)
+rookCastlingTgts[g8Key] = genPos (0, 5)
+rookCastlingTgts[c1Key] = genPos (7, 3)
+rookCastlingTgts[g1Key] = genPos (7, 5)
 
 t0  = []
 t1  = [c1]
@@ -62,67 +62,67 @@ t3  = [c8]
 t4  = [g8]
 t34 = [c8, g8]
 
-new-castling-rts = {}
+newCastlingRts = {}
 
-new-castling-rts[white] =
+newCastlingRts[white] =
   KQkq : kq, KQk : k, KQq : q, KQ : NO, Kkq : kq, Kk : k, Kq : q, K   : NO
   Qkq  : kq, Qk  : k, Qq  : q, Q  : NO, kq  : kq, k  : k, q  : q, '-' : NO
 
-new-castling-rts[black] =
+newCastlingRts[black] =
   KQkq : KQ, Qkq : Q, Kkq : K, kq : NO, KQq : KQ, Qq : Q, Kq : K, q   : NO
   KQk  : KQ, Qk  : Q, Kk  : K, k  : NO, KQ  : KQ, Q  : Q, K  : K, '-' : NO 
 
-castling-tgts = {}
+castlingTgts = {}
 
-castling-tgts[white] =
+castlingTgts[white] =
   KQkq : t12, KQk : t12, KQq : t12, KQ  : t12
   Qkq  : t1,  Qk  : t1,  Qq  : t1,  Q   : t1
   Kkq  : t2,  Kk  : t2,  Kq  : t2,  K   : t2
   kq   : t0,  k   : t0,  q   : t0,  '-' : t0
 
-castling-tgts[black] =
+castlingTgts[black] =
   KQkq : t34, Qkq : t34, Kkq : t34, kq  : t34
   KQq  : t3,  Qq : t3,   Kq  : t3,  q   : t3
   KQk  : t4,  Qk : t4,   Kk  : t4,  k   : t4
   KQ   : t0,  Q  : t0,   K   : t0,  '-' : t0 
 
-castling-paths = {}
-castling-paths[c1-key] = [(e1 = gen-pos (7, 4)), gen-pos (7, 3), c1]
-castling-paths[g1-key] = [e1, gen-pos (7, 5), g1] 
-castling-paths[c8-key] = [(e8 = gen-pos (0, 4)), gen-pos (0, 3), c8]
-castling-paths[g8-key] = [e8, gen-pos (0, 5), g8]
+castlingPaths = {}
+castlingPaths[c1Key] = [(e1 = genPos (7, 4)), genPos (7, 3), c1]
+castlingPaths[g1Key] = [e1, genPos (7, 5), g1] 
+castlingPaths[c8Key] = [(e8 = genPos (0, 4)), genPos (0, 3), c8]
+castlingPaths[g8Key] = [e8, genPos (0, 5), g8]
 
 castling? = (src, tgt) ->
-  Math.abs (file-difference (src, tgt)) > 1
+  Math.abs (fileDifference (src, tgt)) > 1
 
-castling-permitted? = (castling-rts, black?) -> \rank-diff ->
-  kingward? = rank-diff > 0
-  matcher = castling-matcher (black?, kingward?)
-  /#{matcher}/.test castling-rts
+castlingPermitted? = (castlingRts, black?) -> \rankDiff ->
+  kingward? = rankDiff > 0
+  matcher = castlingMatcher (black?, kingward?)
+  /#{matcher}/.test castlingRts
 
-get-potential-castling-moves = (bd, color, castling-rts, attackable?) ->
+getPotentialCastlingMoves = (bd, color, castlingRts, attackable?) ->
 
-  castling-tgts[color][castling-rts]
-      .filter (queenside-transitable? bd)
+  castlingTgts[color][castlingRts]
+      .filter (queensideTransitable? bd)
       .filter (safe? (bd, color, attackable?))
 
 getPotentialKingAttacks = (bd, src) ->
-  king-fns.getPotentialMoves (bd, src, no-rts)
+  kingFns.getPotentialMoves (bd, src, noRts)
 
 modifyCastlingRights = (rts, src) ->
-  king-color = if rank-of src == 0 then black else white
-  new-castling-rts[king-color][rts]
+  kingColor = if rankOf src == 0 then black else white
+  newCastlingRts[kingColor][rts]
 
-queenside-transitable? = \board \tgt ->
+queensideTransitable? = \board \tgt ->
   switch tgt
-    when c1 then (empty-at? board b1)
-    when c8 then (empty-at? board b8)
+    when c1 then (emptyAt? board b1)
+    when c8 then (emptyAt? board b8)
     else true
 
-rook-castling-path = \king-tgt ->
-  key = JSON.stringify king-tgt
-  src = rook-castling-srcs[key]
-  tgt = rook-castling-tgts[key]
+rookCastlingPath = \kingTgt ->
+  key = JSON.stringify kingTgt
+  src = rookCastlingSrcs[key]
+  tgt = rookCastlingTgts[key]
   [src, tgt]
 
 safe? = (board, color, attackable?) -> (tgt) ->
@@ -130,13 +130,13 @@ safe? = (board, color, attackable?) -> (tgt) ->
 
   do (attackable? = attackable?.bind (null, board, color)) ->
 
-    ! (castling-paths[key].some attackable?)
+    ! (castlingPaths[key].some attackable?)
 
 # ----------------
 # Mixin : Stepper
 # ----------------
 
-king-fns = defaults stepper-fns {
+kingFns = defaults stepperFns {
   getPotentialKingAttacks
   modifyCastlingRights
 }
@@ -145,29 +145,29 @@ king-fns = defaults stepper-fns {
 # Override mixin functions.
 # --------------------------
 
-castle = do (simple-move = king-fns.move) ->
+castle = do (simpleMove = kingFns.move) ->
   (bd, src, tgt) ->
-    [rook-src, rook-tgt] = rook-castling-path tgt
-    bd-after-king-moves  = simple-move (bd, src) tgt
-    simple-move (bd-after-king-moves, rook-src) rook-tgt
+    [rookSrc, rookTgt] = rookCastlingPath tgt
+    bdAfterKingMoves  = simpleMove (bd, src) tgt
+    simpleMove (bdAfterKingMoves, rookSrc) rookTgt
 
-king-fns.getPotentialMoves = do (get-simple-moves = king-fns.getPotentialMoves) ->
+kingFns.getPotentialMoves = do (getSimpleMoves = kingFns.getPotentialMoves) ->
   (bd, src, rts, _0, _1, attackable?) ->
-    king-color  = color-at bd src
+    kingColor  = colorAt bd src
 
-    simple-moves = get-simple-moves (
+    simpleMoves = getSimpleMoves (
       bd, src, undefined, undefined, king)
 
-    return simple-moves if rts == no-rts
+    return simpleMoves if rts == noRts
 
-    simple-moves.concat (
-      get-potential-castling-moves (bd, king-color, rts, attackable?))
+    simpleMoves.concat (
+      getPotentialCastlingMoves (bd, kingColor, rts, attackable?))
   
-king-fns.move = do (non-castling-move = king-fns.move) ->
+kingFns.move = do (nonCastlingMove = kingFns.move) ->
   (bd, src) -> \tgt ->
     if castling? (src, tgt)
       castle (bd, src, tgt)
     else
-      non-castling-move (bd, src) tgt
+      nonCastlingMove (bd, src) tgt
 
-module.exports = king-fns
+module.exports = kingFns

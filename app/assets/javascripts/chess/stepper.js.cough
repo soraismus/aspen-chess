@@ -1,30 +1,28 @@
-{ available?, inessent?, offsets-for } = require './utilities'
-{ defaults }                           = require './base-helpers'
-piece-fns                              = require './piece'
-{ generate-position! }                 = require './constructors'
-{ rank-&-file-from }                   = require './extractors'
+{ available?, inessent?, offsetsFor } = require './utilities'
+{ defaults }                          = require './base-helpers'
+{ generatePosition! }                 = require './constructors'
+pieceFns                              = require './piece'
+{ rank_&_file_from }                  = require './extractors'
 
 getPotentialMoves = (bd, src, rts, passant, type, attackable?) ->
-  moves            = []
-  rank-&-file-from = x.rank-&-file-from
-  [rank, file]     = rank-&-file-from src
-  offsets          = offsets-for type
-  inessent?        = inessent?
-  gen-pos!         = generate-position!
-  available?       = available? (bd, src)
+  moves        = []
+  [rank, file] = rank_&_file_from src
+  offsets      = offsetsFor type
+  inessent?    = inessent?
+  available?   = available? (bd, src)
 
   for dir in offsets
-    [rank-diff, file-diff] = rank-&-file-from dir
+    [rankDiff, fileDiff] = rank_&_file_from dir
 
-    new-rank = rank + rank-diff
-    new-file = file + file-diff
+    newRank = rank + rankDiff
+    newFile = file + fileDiff
 
-    tgt = gen-pos! (new-rank, new-file)
+    tgt = generatePosition! (newRank, newFile)
 
     moves.push tgt if inessent? tgt && available? tgt
 
   moves
 
-stepper-fns = defaults piece-fns { getPotentialMoves }
+stepperFns = defaults pieceFns { getPotentialMoves }
 
-module.exports = stepper-fns
+module.exports = stepperFns

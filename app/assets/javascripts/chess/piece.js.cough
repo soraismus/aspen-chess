@@ -1,16 +1,16 @@
-chessman-fns                               = require './chessman'
-{ defaults }                               = require './base-helpers'
-{ unset-passant-pos, unset-promotion-pos } = require './constants'
+chessmanFns                            = require './chessman'
+{ defaults }                           = require './base-helpers'
+{ unsetPassantPos, unsetPromotionPos } = require './constants'
 
 setPassantPosition = ->
-  unset-passant-pos
+  unsetPassantPos
 
 setPromotionPosition = ->
-  unset-promotion-pos
+  unsetPromotionPos
 
-piece-fns = defaults chessman-fns {
+pieceFns = defaults chessmanFns {
   setPassantPosition
   setPromotionPosition
 }
 
-module.exports = piece-fns
+module.exports = pieceFns

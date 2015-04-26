@@ -1,40 +1,40 @@
 {
-  unset-passant-pos
-  unset-passant-pos-code
+  unsetPassantPos
+  unsetPassantPosCode
 } = require './constants'
 
 {
-  unset-passant-position-code?
-  unset-passant-position?
+  unsetPassantPositionCode?
+  unsetPassantPosition?
 } = require './types'
 
-contract-board = \board ->
+contractBoard = \board ->
   rgx    = /.{8,8}/g
   match  = rgx.exec(board)
-  result = contract-empty-squares match[0]
+  result = contractEmptySquares match[0]
 
   while ((match = rgx.exec(board)) != null)
-    result += "/#{contract-empty-squares match[0]}"
+    result += "/#{contractEmptySquares match[0]}"
 
   return result
 
-contract-empty-squares = \string ->
+contractEmptySquares = \string ->
   while ((match = string.match(/-+/)) != null)
     string = string.replace(match[0], match[0].length)
 
   return string
 
-decode-fen = \fen ->
-  [fen-bd, player, castlingRights, fen-passant, fen-clock, fen-mv-nbr] =
+decodeFen = \fen ->
+  [fenBd, player, castlingRights, fenPassant, fenClock, fenMvNbr] =
     fen.split space
 
-  board             = expand-fen-board fen-bd
-  passantPosition   = decode-position-code fen-passant
+  board             = expandFenBoard fenBd
+  passantPosition   = decodePositionCode fenPassant
   promotionPosition = '-'
-  clock             = Number.parseInt (fen-clock, 10)
-  moveNumber        = Number.parseInt (fen-mv-nbr, 10)
+  clock             = Number.parseInt (fenClock, 10)
+  moveNumber        = Number.parseInt (fenMvNbr, 10)
 
-  console.log ('#decode-fen', 'expand-fen-board fen-bd', board)
+  console.log ('#decodeFen', 'expandFenBoard fenBd', board)
   
   {
     board
@@ -46,63 +46,62 @@ decode-fen = \fen ->
     moveNumber
   }
 
-decode-position-code = \pos-code ->
-  if y.unset-passant-position-code? pos-code
-    c.unset-passant-pos-code
+decodePositionCode = \posCode ->
+  if unsetPassantPositionCode? posCode
+    unsetPassantPosCode
   else
-    decode-set-position-code pos-code
+    decodeSetPositionCode posCode
 
-decode-set-position-code = \pos-code ->
-  rank = 8 - Number.parseInt (pos-code[1], 10)
-  file = (pos-code.charCodeAt 0) - 97
+decodeSetPositionCode = \posCode ->
+  rank = 8 - Number.parseInt (posCode[1], 10)
+  file = (posCode.charCodeAt 0) - 97
+  [rank, file]
 
-  return [rank, file]
-
-digit-as-string? = \char ->
+digitAsString? = \char ->
   /^[1-8]$/.test char
 
-encode-context = \ctx ->
+encodeContext = \ctx ->
   { player, castlingRights } = ctx
 
-  fen-bd = contract-board ctx.board
-  fen-passant = encode-passant-position ctx.passantPosition
-  fen-clock = ctx.clock
-  fen-mv-nbr = ctx.moveNumber
+  fenBd      = contractBoard ctx.board
+  fenPassant = encodePassantPosition ctx.passantPosition
+  fenClock   = ctx.clock
+  fenMvNbr   = ctx.moveNumber
 
-  generate-fen (
-    fen-bd, player, castlingRights, fen-passant, fen-clock, fen-mv-nbr)
+  generateFen (
+    fenBd, player, castlingRights, fenPassant, fenClock, fenMvNbr)
 
-encode-passant-position = \passant ->
-  if y.unset-passant-position? passant
-    c.unset-passant-pos
+encodePassantPosition = \passant ->
+  if unsetPassantPosition? passant
+    unsetPassantPos
   else
-    encode-set-passant-position passant
+    encodeSetPassantPosition passant
 
-encode-set-passant-position = ([rank, file]) ->
-  file-letter = String.fromCharCode (97 + file)
-  rank-number = 8 - rank
+encodeSetPassantPosition = ([rank, file]) ->
+  fileLetter = String.fromCharCode (97 + file)
+  rankNumber = 8 - rank
 
-  "#{file-letter}#{rank-number}"
+  "#{fileLetter}#{rankNumber}"
 
-expand-fen-board = \fen-board ->
-  fen-board.replace(/\//g, '')
+expandFenBoard = \fenBoard ->
+  fenBoard.replace(/\//g, '')
           .split('')
-          .map(expand-char)
+          .map(expandChar)
           .join('')
 
-expand-char = \char ->
-  if (digit-as-string? char) then (expand-empty-squares char) else char
+expandChar = \char ->
+  if (digitAsString? char) then (expandEmptySquares char) else char
 
-expand-empty-squares = \digit-as-string ->
-  nbr-times = Number.parseInt (digit-as-string, 10)
-  repeat (empty-square, nbr-times)
+expandEmptySquares = \digitAsString ->
+  nbrTimes = Number.parseInt (digitAsString, 10)
+  repeat (emptySquare, nbrTimes)
 
-generate-fen = (bd, plyr, rts, pass, clock, mv-nbr) ->
-  "#{bd} #{plyr} #{rts} #{pass} #{clock} #{mv-nbr}"
+generateFen = (bd, plyr, rts, pass, clock, mvNbr) ->
+  "#{bd} #{plyr} #{rts} #{pass} #{clock} #{mvNbr}"
 
 # TODO: Move the following function into an appropriate file.
 repeat = (string, count) ->
-  result = empty-string
+  result = emptyString
 
   return result if count < 1
 
@@ -120,19 +119,19 @@ repeat = (string, count) ->
 # Constants
 # ----------
 
-black        = 'b'
-empty-square = '-'
-empty-string = ''
-space        = ' '
-white        = 'w'
+black       = 'b'
+emptySquare = '-'
+emptyString = ''
+space       = ' '
+white       = 'w'
 
 # ------------
 # Fen Service
 # ------------
 
-fen-service = {
-  decode-fen
-  encode-context
+fenService = {
+  decodeFen
+  encodeContext
 }
 
-module.exports = fen-service
+module.exports = fenService

@@ -1,18 +1,18 @@
-{ empty-square } = require './constants'
-{ replace }      = require './utilities'
-{ square-at }    = require './extractors'
+{ emptySquare } = require './constants'
+{ replace }     = require './utilities'
+{ squareAt }    = require './extractors'
 
 modifyCastlingRights = \rts ->
   rts
 
 move = (bd, src) -> \tgt ->
-  src-chessman = square-at bd src
-  bd-w/-duplicate-piece = replace (src-chessman, bd, tgt)
-  replace (empty-square, bd-w/-duplicate-piece, src)
+  srcChessman = squareAt bd src
+  bd_w/_duplicate_piece = replace (srcChessman, bd, tgt)
+  replace (emptySquare, bd_w/_duplicate_piece, src)
 
-chessman-fns = {
+chessmanFns = {
   modifyCastlingRights
   move
 }
 
-module.exports = chessman-fns
+module.exports = chessmanFns

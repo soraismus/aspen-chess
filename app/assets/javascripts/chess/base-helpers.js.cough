@@ -1,7 +1,7 @@
-{ empty-square } = require './constants'
+{ emptySquare } = require './constants'
 
 black? = \sq ->
-  sq == sq.toLowerCase () && sq != empty-square
+  sq == sq.toLowerCase () && sq != emptySquare
 
 defaults = \mixin \val ->
   for prop of mixin
@@ -10,18 +10,18 @@ defaults = \mixin \val ->
   val
 
 white? = \sq ->
-  sq == sq.toUpperCase () && sq != empty-square
+  sq == sq.toUpperCase () && sq != emptySquare
 
-to-black = \sq -> sq.toLowerCase ()
+toBlack = \sq -> sq.toLowerCase ()
 
-to-white = \sq -> sq.toUpperCase ()
+toWhite = \sq -> sq.toUpperCase ()
 
 baseHelpers = {
   black?
   defaults
   white?
-  to-black
-  to-white
+  toBlack
+  toWhite
 }
 
 module.exports = baseHelpers

@@ -1,79 +1,79 @@
-{ defaults }       = require './base-helpers'
-{ encode-context } = require './fen-service'
-king-fns           = require './king'
-knight-fns         = require './knight'
-pawn-fns           = require './pawn'
-rook-fns           = require './rook'
-slider-fns         = require './slider'
+{ defaults }      = require './base-helpers'
+{ encodeContext } = require './fen-service'
+kingFns           = require './king'
+knightFns         = require './knight'
+pawnFns           = require './pawn'
+rookFns           = require './rook'
+sliderFns         = require './slider'
 
 {
   black?
-  opposing-color
+  opposingColor
   replace
-  same-position?
-  to-2d
+  samePosition?
+  to_2d
 } = require './utilities'
 
 {
-  chessman-positions-from
-  chessman-type-at
-  chessman-type-of
-  color-of
-  square-at
+  chessmanPositionsFrom
+  chessmanTypeAt
+  chessmanTypeOf
+  colorOf
+  squareAt
 } = require './extractors'
 
 {
   bishop
-  black-king
+  blackKing
   king
   knight
-  no-castling-rts
+  noCastlingRts
   pawn
   queen
   rook
-  white-king
-  unset-promotion-pos
+  whiteKing
+  unsetPromotionPos
 } = require './constants'
 
-dispatch-table = {}
-dispatch-table[king  ] = king-fns
-dispatch-table[queen ] = slider-fns
-dispatch-table[rook  ] = rook-fns
-dispatch-table[bishop] = slider-fns
-dispatch-table[knight] = knight-fns
-dispatch-table[pawn  ] = pawn-fns
+dispatchTable = {}
+dispatchTable[king  ] = kingFns
+dispatchTable[queen ] = sliderFns
+dispatchTable[rook  ] = rookFns
+dispatchTable[bishop] = sliderFns
+dispatchTable[knight] = knightFns
+dispatchTable[pawn  ] = pawnFns
 
-add-msg = (ctx, msg) ->
-  (new-ctx = copy ctx).message = msg
-  new-ctx
+addMsg = (ctx, msg) ->
+  (newCtx = copy ctx).message = msg
+  newCtx
 
 attackable? = (board, color, pos) ->
-  vuln-positions = vulnerable-positions-for (board, color)
-  contains (vuln-positions, pos)
+  vulnPositions = vulnerablePositionsFor (board, color)
+  contains (vulnPositions, pos)
 
-call = \fn-name \chessman-type ->
-  dispatch-table[chessman-type][fn-name]
+call = \fnName \chessmanType ->
+  dispatchTable[chessmanType][fnName]
 
 checkmate? = (bd, passant, color) ->
-  ally-positions = chessman-positions-from (bd, color)
+  allyPositions = chessmanPositionsFrom (bd, color)
 
-  for ally-pos in ally-positions
-    potential-moves =
-      getPotentialMoves (bd, ally-pos, no-castling-rts, passant)
+  for allyPos in allyPositions
+    potentialMoves =
+      getPotentialMoves (bd, allyPos, noCastlingRts, passant)
 
-    for potential-mv in potential-moves
-      new-bd = move (bd, ally-pos, passant) potential-mv
-      return false unless in-check? (new-bd, color)
+    for potentialMv in potentialMoves
+      newBd = move (bd, allyPos, passant) potentialMv
+      return false unless inCheck? (newBd, color)
 
   true
 
-contains = (potential-positions, tgt) ->
-  potential-positions.some (same-position? tgt)
+contains = (potentialPositions, tgt) ->
+  potentialPositions.some (samePosition? tgt)
 
 copy = \ctx ->
   defaults ctx {}
 
-extract-props = \ctx ->
+extractProps = \ctx ->
   {
     board
     player
@@ -85,137 +85,134 @@ extract-props = \ctx ->
 
   [board, player, castlingRights, passantPosition, clock, moveNumber]
 
-game-completed-response = \new-ctx ->
-  add-msg (new-ctx, 'checkmate')
+gameCompletedResponse = \newCtx ->
+  addMsg (newCtx, 'checkmate')
 
-game-continues-response = \new-ctx ->
-  add-msg (new-ctx, 'check')
+gameContinuesResponse = \newCtx ->
+  addMsg (newCtx, 'check')
 
-generate-new-ctx = (new-bd, orig-ctx, src, tgt) ->
-  [orig-bd, player, rts, pass, clock, mv-nbr] = extract-props orig-ctx
+generateNewCtx = (newBd, origCtx, src, tgt) ->
+  [origBd, player, rts, pass, clock, mvNbr] = extractProps origCtx
 
-  board  : new-bd
-  player : opposing-color player
-  castlingRights    : modifyCastlingRights (orig-bd, src, rts)
-  passantPosition   : setPassantPosition   (orig-bd, src, tgt)
-  promotionPosition : setPromotionPosition (orig-bd, src, tgt)
-  clock             : update-clock (clock)
-  moveNumber        : update-move-number (player, mv-nbr)
+  board  : newBd
+  player : opposingColor player
+  castlingRights    : modifyCastlingRights (origBd, src, rts)
+  passantPosition   : setPassantPosition   (origBd, src, tgt)
+  promotionPosition : setPromotionPosition (origBd, src, tgt)
+  clock             : updateClock (clock)
+  moveNumber        : updateMoveNumber (player, mvNbr)
 
 getPotentialKingAttacks = (bd, src) ->
-  type = chessman-type-at bd src
+  type = chessmanTypeAt bd src
   call 'getPotentialKingAttacks' type (bd, src, type)
 
 getPotentialMoves = (bd, src, rts, passant) ->
-  type = chessman-type-at bd src
+  type = chessmanTypeAt bd src
   call 'getPotentialMoves' type (bd, src, rts, passant, type, attackable?)
 
-in-check? = (board, color) ->
-  king-pos = king-position-for (board, color)
-  attackable? (board, color, king-pos)
+inCheck? = (board, color) ->
+  kingPos = kingPositionFor (board, color)
+  attackable? (board, color, kingPos)
 
-king-position-for = (board, color) ->
-  king = if black? color then black-king else white-king
-  to-2d (board.indexOf king)
+kingPositionFor = (board, color) ->
+  king = if black? color then blackKing else whiteKing
+  to_2d (board.indexOf king)
 
-king-safe-response = \new-ctx ->
-  [new-bd, opponent] = extract-props new-ctx
+kingSafeResponse = \newCtx ->
+  [newBd, opponent] = extractProps newCtx
   
-  if in-check? (new-bd, opponent)
-    possible-checkmate-response (new-ctx)
+  if inCheck? (newBd, opponent)
+    possibleCheckmateResponse (newCtx)
   else
-    new-ctx
+    newCtx
 
-king-unsafe-response = \ctx ->
-  add-msg (ctx, 'illegal move')
+kingUnsafeResponse = \ctx ->
+  addMsg (ctx, 'illegal move')
 
 modifyCastlingRights = (bd, src, rts) ->
-  type = chessman-type-at bd src
+  type = chessmanTypeAt bd src
   call 'modifyCastlingRights' type (rts, src)
 
 move = (bd, src, passant) -> \tgt ->
-  type = chessman-type-at bd src
+  type = chessmanTypeAt bd src
   call 'move' type (bd, src, passant) tgt
 
-move-illegal-response = \ctx ->
-  add-msg (ctx, 'illegal move')
+moveIllegalResponse = \ctx ->
+  addMsg (ctx, 'illegal move')
 
-move-legal? = (bd, src, rts, passant) -> \tgt ->
-  type = chessman-type-at bd src
-  potential-tgts = getPotentialMoves (bd, src, rts, passant)
+moveLegal? = (bd, src, rts, passant) -> \tgt ->
+  type = chessmanTypeAt bd src
+  potentialTgts = getPotentialMoves (bd, src, rts, passant)
   
-  contains (potential-tgts, tgt)
+  contains (potentialTgts, tgt)
 
-move-legal-response = (orig-ctx, src, tgt) ->
-  [bd, player, _, passant] = extract-props orig-ctx
+moveLegalResponse = (origCtx, src, tgt) ->
+  [bd, player, _, passant] = extractProps origCtx
 
-  new-bd = move (bd, src, passant) tgt
+  newBd = move (bd, src, passant) tgt
 
-  if in-check? (new-bd, player)
-    king-unsafe-response (orig-ctx)
+  if inCheck? (newBd, player)
+    kingUnsafeResponse (origCtx)
   else
-    new-ctx = generate-new-ctx (new-bd, orig-ctx, src, tgt)
-    king-safe-response (new-ctx)
+    newCtx = generateNewCtx (newBd, origCtx, src, tgt)
+    kingSafeResponse (newCtx)
 
-navigate = \ctx ->
-  global.location.hash = encodeURI (encode-context ctx)
+possibleCheckmateResponse = \newCtx ->
+  [newBd, opponent, _, newPassant] = extractProps newCtx
 
-possible-checkmate-response = \new-ctx ->
-  [new-bd, opponent, _, new-passant] = extract-props new-ctx
-
-  if checkmate? (new-bd, new-passant, opponent)
-    game-completed-response (new-ctx)
+  if checkmate? (newBd, newPassant, opponent)
+    gameCompletedResponse (newCtx)
   else
-    game-continues-response (new-ctx)
+    gameContinuesResponse (newCtx)
 
 promote = \ctx \chessman ->
-  new-board = replace (chessman, ctx.board, ctx.promotionPosition)
-  new-ctx = copy ctx
-  new-ctx.board = new-board
-  new-ctx.promotionPosition = unset-promotion-pos
-  king-safe-response new-ctx
+  newBoard = replace (chessman, ctx.board, ctx.promotionPosition)
+  newCtx = copy ctx
+  newCtx.board = newBoard
+  newCtx.promotionPosition = unsetPromotionPos
+  kingSafeResponse newCtx
 
-query-game-service = (ctx, src, tgt) ->
-  [bd, player, rts, passant] = extract-props ctx
+queryGameService = (ctx, src, tgt) ->
+  [bd, player, rts, passant] = extractProps ctx
 
-  if move-legal? (bd, src, rts, passant) tgt
-    move-legal-response (ctx, src, tgt)
+  if moveLegal? (bd, src, rts, passant) tgt
+    moveLegalResponse (ctx, src, tgt)
   else
-    move-illegal-response ctx
+    moveIllegalResponse ctx
 
 setPassantPosition = (bd, src, tgt) ->
-  chessman = square-at bd src
-  type     = chessman-type-of chessman
-  color    = color-of chessman
+  chessman = squareAt bd src
+  type     = chessmanTypeOf chessman
+  color    = colorOf chessman
 
   call 'setPassantPosition' type (color, src, tgt)
 
 setPromotionPosition = (bd, src, tgt) ->
-  chessman = square-at bd src
-  type     = chessman-type-of chessman
-  color    = color-of chessman
+  chessman = squareAt bd src
+  type     = chessmanTypeOf chessman
+  color    = colorOf chessman
 
   call 'setPromotionPosition' type (color, tgt)
 
-update-clock = \nbr ->
+updateClock = \nbr ->
   nbr + 1
 
-update-move-number = (player, mv-nbr) ->
-  if black? player then mv-nbr + 1 else mv-nbr
+updateMoveNumber = (player, mvNbr) ->
+  if black? player then mvNbr + 1 else mvNbr
 
-vulnerable-positions-for = (board, color) ->
-  foe-color     = opposing-color (color)
-  foe-positions = chessman-positions-from (board, foe-color)
+vulnerablePositionsFor = (board, color) ->
+  foeColor     = opposingColor (color)
+  foePositions = chessmanPositionsFrom (board, foeColor)
 
-  get-potential-king-attacks = \pos ->
+  getPotentialKingAttacks = \pos ->
     getPotentialKingAttacks (board, pos)
 
-  #Array.concat.apply (null, (foe-positions.map get-potential-king-attacks))
-  shallow-flatten (foe-positions.map get-potential-king-attacks)
+  #Array.concat.apply (null, (foePositions.map getPotentialKingAttacks))
+  shallowFlatten (foePositions.map getPotentialKingAttacks)
 
-game-service = {
+gameService = {
   promote
-  query-game-service
+  queryGameService
 }
 
-module.exports = game-service
+module.exports = gameService

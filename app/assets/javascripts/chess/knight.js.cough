@@ -1,22 +1,22 @@
 { defaults } = require './base-helpers'
 { knight }   = require './constants'
-stepper-fns  = require './stepper'
+stepperFns   = require './stepper'
 
 # ----------------
 # Mixin : Stepper
 # ----------------
 
-knight-fns = defaults stepper-fns {}
+knightFns = defaults stepperFns {}
 
 # --------------------------
 # Override mixin functions.
 # --------------------------
 
-knight-fns.getPotentialKingAttacks =
-  do (getPotentialMoves = knight-fns.getPotentialMoves) ->
+knightFns.getPotentialKingAttacks =
+  do (getPotentialMoves = knightFns.getPotentialMoves) ->
     (bd, src) ->
       getPotentialMoves (bd, src, undefined, undefined, knight)
 
-knight-fns.getPotentialMoves = knight-fns.getPotentialKingAttacks
+knightFns.getPotentialMoves = knightFns.getPotentialKingAttacks
 
-module.exports = knight-fns
+module.exports = knightFns

@@ -1,7 +1,7 @@
-{ black, rook, white }        = require './constants'
-{ defaults }                  = require './base-helpers'
-{ file-of, rank-&-file-from } = require './extractors'
-slider-fns                    = require './slider'
+{ black, rook, white }       = require './constants'
+{ defaults }                 = require './base-helpers'
+{ fileOf, rank_&_file_from } = require './extractors'
+sliderFns                    = require './slider'
 
 # When a rook is captured, does this code still allow a king to castle?
 
@@ -21,9 +21,9 @@ k   = 'k'
 q   = 'q'
 NO  = '-'
 
-new-castling-rts = {}
+newCastlingRts = {}
 
-new-castling-rts[white] =
+newCastlingRts[white] =
   kingside :
     KQkq : Qkq, KQk : Qk, KQq : Qq, KQ  : Q
     Kkq  : kq,  Kk  : k,  Kq  : q,  K   : NO
@@ -35,7 +35,7 @@ new-castling-rts[white] =
     Qkq : kq,   Qk  : k,  Qq  : q,  Q   : NO
     kq  : kq,   k   : k,  q   : q,  '-' : NO
 
-new-castling-rts[black] =
+newCastlingRts[black] =
   kingside :
     KQkq : KQq, Qkq : Qq, Kkq : Kq, kq  : q
     KQq  : KQq, Qq  : Qq, Kq  : Kq, q   : q
@@ -48,36 +48,36 @@ new-castling-rts[black] =
     KQ   : KQ,  Q   : Q,  K   : K,  '-' : NO 
 
 kingside? = \src ->
-  file-of src >= 4
+  fileOf src >= 4
 
 modifyCastlingRights = (rts, src) ->
-  [src-rank, src-file] = rank-&-file-from src
-  rook-color = if src-rank == 0 then black else white
-  side = which-side? src
+  [srcRank, srcFile] = rank_&_file_from src
+  rookColor = if srcRank == 0 then black else white
+  side = whichSide? src
 
-  new-castling-rts[rook-color][side][rts]
+  newCastlingRts[rookColor][side][rts]
 
-which-side? = \src ->
+whichSide? = \src ->
   if kingside? src then 'kingside' else 'queenside'
 
 # ----------------
 # Mixin : Slider
 # ----------------
 
-rook-fns = defaults slider-fns { modifyCastlingRights }
+rookFns = defaults sliderFns { modifyCastlingRights }
 
 # --------------------------
 # Override mixin functions.
 # --------------------------
 
-rook-fns.getPotentialMoves =
-  do (getPotentialMoves = rook-fns.getPotentialMoves) ->
+rookFns.getPotentialMoves =
+  do (getPotentialMoves = rookFns.getPotentialMoves) ->
     (bd, src) ->
       getPotentialMoves (bd, src, undefined, undefined, rook)
 
-rook-fns.getPotentialKingAttacks =
-  do (getPotentialKingAttacks = rook-fns.getPotentialKingAttacks) ->
+rookFns.getPotentialKingAttacks =
+  do (getPotentialKingAttacks = rookFns.getPotentialKingAttacks) ->
     (bd, src) ->
       getPotentialKingAttacks (bd, src, rook)
 
-module.exports = rook-fns
+module.exports = rookFns

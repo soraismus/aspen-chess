@@ -1,14 +1,14 @@
-{ black? }   = require './types'
-{ to-white } = require './base-helpers'
+{ black? }  = require './types'
+{ toWhite } = require './base-helpers'
 
 {
   bishop
-  black-bishop
-  black-king
-  black-knight
-  black-pawn
-  black-queen
-  black-rook
+  blackBishop
+  blackKing
+  blackKnight
+  blackPawn
+  blackQueen
+  blackRook
   king
   knight
   pawn
@@ -16,33 +16,33 @@
   rook
 } = require './constants'
 
-black-chessman-from = {}
-black-chessman-from[king  ] = black-king
-black-chessman-from[queen ] = black-queen
-black-chessman-from[rook  ] = black-rook
-black-chessman-from[bishop] = black-bishop
-black-chessman-from[knight] = black-knight
-black-chessman-from[pawn  ] = black-pawn
+blackChessmanFrom = {}
+blackChessmanFrom[king  ] = blackKing
+blackChessmanFrom[queen ] = blackQueen
+blackChessmanFrom[rook  ] = blackRook
+blackChessmanFrom[bishop] = blackBishop
+blackChessmanFrom[knight] = blackKnight
+blackChessmanFrom[pawn  ] = blackPawn
 
-generate-chessman = (chessman-type, color) ->
-  black-chessman = black-chessman-from[chessman-type]
-  if (black? color) then black-chessman else (to-white black-chessman)
+generateChessman = (chessmanType, color) ->
+  blackChessman = blackChessmanFrom[chessmanType]
+  if (black? color) then blackChessman else (toWhite blackChessman)
 
-generate-context =
+generateContext =
   (board, player, castlingRights, passantPosition, clock, moveNumber) ->
     { board, player, castlingRights, passantPosition, clock, moveNumber }
 
-generate-position = (rank, file) ->
-  generate-position! (rank, file)
+generatePosition = (rank, file) ->
+  generatePosition! (rank, file)
 
-generate-position! = (rank, file) ->
+generatePosition! = (rank, file) ->
   [rank, file]
 
 constructors = {
-  generate-chessman
-  generate-context
-  generate-position
-  generate-position!
+  generateChessman
+  generateContext
+  generatePosition
+  generatePosition!
 } 
 
 module.exports = constructors

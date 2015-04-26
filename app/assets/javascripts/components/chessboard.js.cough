@@ -1,53 +1,53 @@
-{ black?, occupied? }   = require '../chess/utilities'
-{ color-of, square-at } = require '../chess/extractors'
-{ img, table, td, tr }  = require './DOM'
-{ white }               = require '../chess/constants'
+{ black?, occupied? }  = require '../chess/utilities'
+{ colorOf, squareAt }  = require '../chess/extractors'
+{ img, table, td, tr } = require './DOM'
+{ white }              = require '../chess/constants'
 
-type-at = require('../chess/extractors').corresponding-black-chessman
+typeAt = require('../chess/extractors').correspondingBlackChessman
 
 # Initial, default settings.
-active-color       = white
-current-user-color = white
+activeColor       = white
+currentUserColor = white
 orientation        = white
 
 active? = \color ->
-  color == active-color && color == current-user-color
+  color == activeColor && color == currentUserColor
 
-add-chessboard = \board ->
-  ranks = get-indices().map(add-rank(board))
+addChessboard = \board ->
+  ranks = getIndices().map(addRank(board))
   table
     className : 'board'
     ranks
 
-add-chessman = (color, type, rank, file) ->
+addChessman = (color, type, rank, file) ->
   img
-    className : chessman-class (rank, file, color)
-    src       : src-for (color, type)
+    className : chessmanClass (rank, file, color)
+    src       : srcFor (color, type)
 
-add-rank = \board \rank ->
-  squares = get-indices().map(add-square(board, rank))
+addRank = \board \rank ->
+  squares = getIndices().map(addSquare(board, rank))
   tr
     className : 'rank'
-    key       : rank-key rank
+    key       : rankKey rank
     squares
 
-add-square = (board, rank) -> (file) ->
-  square = square-at (board) [rank, file]
-  chessman = chessman-on (square, rank, file)
+addSquare = (board, rank) -> (file) ->
+  square = squareAt (board) [rank, file]
+  chessman = chessmanOn (square, rank, file)
   td
-    className : square-class (rank, file)
-    key       : square-key (rank, file)
+    className : squareClass (rank, file)
+    key       : squareKey (rank, file)
     chessman
 
 Chessboard = \env ->
-  current-user-color = env.color
+  currentUserColor = env.color
   orientation        = env.orientation
   context            = env.context
-  active-color       = context.player
+  activeColor       = context.player
 
-  add-chessboard context.board
+  addChessboard context.board
 
-chessman-class = (rank, file, color) ->
+chessmanClass = (rank, file, color) ->
   # "active piece ch-pos-#{rank}-#{file}"
 
   klasses =
@@ -56,36 +56,36 @@ chessman-class = (rank, file, color) ->
 
   klasses["ch-pos-#{rank}-#{file}"] = true
 
-  get-classname klasses
+  getClassname klasses
 
-chessman-on = (square, rank, file) ->
+chessmanOn = (square, rank, file) ->
   if occupied? square
-    color = color-of square
-    type = type-at square
-    add-chessman (color, type, rank, file)
+    color = colorOf square
+    type = typeAt square
+    addChessman (color, type, rank, file)
   else
     null
 
-get-indices = ->
+getIndices = ->
   if black? orientation then [7..0] else [0..7]
 
-get-classname = (klasses) ->
-  # Assert: non-array-object? klasses
+getClassname = (klasses) ->
+  # Assert: nonArrayObject? klasses
   result = ''
   for own klass, true? of klasses
     result += "#{klass} " if true?
   result.trim ()
 
-rank-key = \rank ->
+rankKey = \rank ->
   "rank-#{rank}"
 
-square-class = (rank, file) ->
+squareClass = (rank, file) ->
   "sq sq-pos-#{rank}-#{file}"
 
-square-key = (rank, file) ->
+squareKey = (rank, file) ->
   "pos-#{rank}-#{file}"
 
-src-for = (color, png-type) ->
-  "assets/#{color}#{png-type}.png"
+srcFor = (color, pngType) ->
+  "assets/#{color}#{pngType}.png"
 
 module.exports = Chessboard

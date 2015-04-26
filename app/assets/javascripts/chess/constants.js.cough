@@ -1,30 +1,30 @@
-black-chessmen = [
-  black-king   = 'k'
-  black-queen  = 'q'
-  black-rook   = 'r'
-  black-bishop = 'b'
-  black-knight = 'n'
-  black-pawn   = 'p'
+blackChessmen = [
+  blackKing   = 'k'
+  blackQueen  = 'q'
+  blackRook   = 'r'
+  blackBishop = 'b'
+  blackKnight = 'n'
+  blackPawn   = 'p'
 ]
 
-white-chessmen = [
-  white-king   = 'K'
-  white-queen  = 'Q'
-  white-rook   = 'R'
-  white-bishop = 'B'
-  white-knight = 'N'
-  white-pawn   = 'P'
+whiteChessmen = [
+  whiteKing   = 'K'
+  whiteQueen  = 'Q'
+  whiteRook   = 'R'
+  whiteBishop = 'B'
+  whiteKnight = 'N'
+  whitePawn   = 'P'
 ]
 
-chessmen = black-chessmen.concat white-chessmen
+chessmen = blackChessmen.concat whiteChessmen
 
-absent-color = '-'
+absentColor = '-'
 
-chessman-colors = [white, black] = ['w', 'b']
+chessmanColors = [white, black] = ['w', 'b']
 
-colors = [absent-color].concat chessman-colors
+colors = [absentColor].concat chessmanColors
 
-piece-types = [
+pieceTypes = [
   king   = 'king'
   queen  = 'queen'
   rook   = 'rook'
@@ -32,95 +32,95 @@ piece-types = [
   knight = 'knight'
 ]
 
-chessman-types = piece-types.concat [pawn = 'pawn']
+chessmanTypes = pieceTypes.concat [pawn = 'pawn']
 
-castling-black = [
-  castling-black-kingward  = 'k'
-  castling-black-queenward = 'q'
+castlingBlack = [
+  castlingBlackKingward  = 'k'
+  castlingBlackQueenward = 'q'
 ]
 
-castling-white = [
-  castling-white-kingward  = 'K'
-  castling-white-queenward = 'Q'
+castlingWhite = [
+  castlingWhiteKingward  = 'K'
+  castlingWhiteQueenward = 'Q'
 ]
 
-initial-board =
+initialBoard =
   'rnbqkbnrPppppppp--------------------------------PpPPPPPPRNBQKBNR'
 
-full-castling-rts = 'KQkq'
+fullCastlingRts = 'KQkq'
 
 players = [
-  white-player = 'w'
-  black-player = 'b'
+  whitePlayer = 'w'
+  blackPlayer = 'b'
 ]
 
-unset-passant-pos = '-'
+unsetPassantPos = '-'
 
-unset-passant-pos-code = '-'
+unsetPassantPosCode = '-'
 
-unset-promotion-pos = '-'
+unsetPromotionPos = '-'
 
 constants = {
-  absent-color
+  absentColor
 
   bishop
 
   black
 
-  black-bishop
+  blackBishop
 
-  black-chessmen
+  blackChessmen
 
-  black-king
+  blackKing
 
-  black-knight
+  blackKnight
 
-  black-pawn
+  blackPawn
 
-  black-player
+  blackPlayer
 
-  black-queen
+  blackQueen
 
-  black-rook
+  blackRook
 
-  castling-black
+  castlingBlack
 
-  castling-black-kingward
+  castlingBlackKingward
 
-  castling-black-queenward
+  castlingBlackQueenward
 
-  castling-white
+  castlingWhite
 
-  castling-white-kingward
+  castlingWhiteKingward
 
-  castling-white-queenward
+  castlingWhiteQueenward
 
-  chessman-colors
+  chessmanColors
 
-  chessman-types
+  chessmanTypes
 
   chessmen
 
   colors
 
-  empty-square : '-'
+  emptySquare : '-'
 
-  initial-context :
-    board             : initial-board
+  initialContext :
+    board             : initialBoard
     player            : white
-    castlingRights    : full-castling-rts
-    passantPosition   : unset-passant-pos
-    promotionPosition : unset-promotion-pos
+    castlingRights    : fullCastlingRts
+    passantPosition   : unsetPassantPos
+    promotionPosition : unsetPromotionPos
     clock             : 0
     moveNumber        : 1
 
-  full-castling-rts : 'KQkq'
+  fullCastlingRts : 'KQkq'
 
   king
 
   knight
 
-  move-offsets :
+  moveOffsets :
     king : [
       [1, 1], [1, 0], [1, -1], [0, 1], [0, -1], [-1, 1], [-1, 0], [-1, -1]
     ]
@@ -137,21 +137,21 @@ constants = {
       [1, 2], [1, -2], [-1, 2], [-1, -2], [2, 1], [2, -1], [-2, 1], [-2, -1]
     ]
 
-  nbr-chessmen-per-color : 16
+  nbrChessmenPerColor : 16
 
-  no-castling-rts : '-'
+  noCastlingRts : '-'
 
   pawn
 
-  pawn-home-ranks :
+  pawnHomeRanks :
     black : 1
     white : 6
 
-  piece-home-ranks :
+  pieceHomeRanks :
     black : 0
     white : 7
 
-  piece-types
+  pieceTypes
 
   players
 
@@ -159,29 +159,29 @@ constants = {
 
   rook
 
-  unset-passant-pos
+  unsetPassantPos
 
-  unset-passant-pos-code
+  unsetPassantPosCode
 
-  unset-promotion-pos
+  unsetPromotionPos
 
   white
 
-  white-bishop
+  whiteBishop
 
-  white-chessmen
+  whiteChessmen
 
-  white-king
+  whiteKing
 
-  white-knight
+  whiteKnight
 
-  white-pawn
+  whitePawn
 
-  white-player
+  whitePlayer
 
-  white-queen
+  whiteQueen
 
-  white-rook
+  whiteRook
 
 }
 
