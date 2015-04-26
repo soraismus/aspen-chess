@@ -30,9 +30,6 @@ black? = \color ->
 color-absent? = \color ->
   color == absent-color
 
-empty? = \square ->
-  empty? square
-
 empty-at? = \board \pos ->
   empty? (square-at board pos)
 
