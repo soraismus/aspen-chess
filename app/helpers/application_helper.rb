@@ -1,4 +1,12 @@
 module ApplicationHelper
+
+  BOARD = 'rnbqkbnrPppppppp--------------------------------PpPPPPPPRNBQKBNR'
+
+  FULL_CASTLING_RTS   = 'KQkq'
+  UNSET_PASSANT_POS   = '-'
+  UNSET_PROMOTION_POS = '-'
+  WHITE               = 'w'
+
   def alert
     flash
   end
@@ -8,7 +16,19 @@ module ApplicationHelper
   end
 
   def chess
-    nil
+    {
+      :orientation => WHITE,
+      :color => WHITE,
+      :context => {
+        :board => BOARD,
+        :player => WHITE,
+        :castlingRights => FULL_CASTLING_RTS,
+        :passantPosition => UNSET_PASSANT_POS,
+        :promotionPosition => UNSET_PROMOTION_POS,
+        :clock => 0,
+        :moveNumber => 1
+      }
+    }
   end
 
   def csrf
