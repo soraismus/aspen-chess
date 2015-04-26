@@ -89,7 +89,10 @@ module ApplicationHelper
   end
 
   def user_list
-    nil
+    {
+      current_user: filter_user_attributes(current_user),
+      users: filter_user_attributes(@users)
+    }
   end
 
   def view
