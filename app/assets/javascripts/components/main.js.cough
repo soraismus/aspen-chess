@@ -1,7 +1,8 @@
-require './home'
 require './login_form'
 require './logout_form'
 require './signup_form'
+
+Home = require './home'
 
 form? = \view ->
   /_form/.test view
@@ -9,7 +10,7 @@ form? = \view ->
 Main = \props ->
   { csrf, home, view } = props
 
-  component = require "./#{view}"
+  component = require "./#{view}" || Home
   component (if form? view then csrf else home)
  
 module.exports = Main

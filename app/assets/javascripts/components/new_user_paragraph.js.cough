@@ -1,0 +1,8 @@
+{ a, p } = require './DOM'
+
+# _p ('New User? ', (__a 'Signin-Signup' ('#', 'Sign up now!')))
+
+NewUserParagraph = ->
+  p (null, a ({ href: '/signup' }, 'Sign up now.'))
+
+module.exports = NewUserParagraph

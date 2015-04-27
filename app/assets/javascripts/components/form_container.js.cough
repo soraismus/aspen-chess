@@ -19,6 +19,6 @@ FormContainer = (props, inputs...) ->
         method      : method
         submitValue : submitValue
         inputs...
-      if outsideForm then outsideForm else null
+      if outsideForm then outsideForm () else null
 
 module.exports = FormContainer

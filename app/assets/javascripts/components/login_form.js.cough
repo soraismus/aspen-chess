@@ -1,12 +1,6 @@
-# __PasswordInput
-# __TextInput
-# MainForm
-# NewUserParagraph
-# RowSpan6_3Form
-
-{ EmailInput, PasswordInput, TextInput } = require './labeled_input'
-FormContainer                            = require './form_container'
-{ form } = require './DOM'
+{ EmailInput, PasswordInput } = require './labeled_input'
+FormContainer                 = require './form_container'
+NewUserParagraph              = require './new_user_paragraph'
 
 ###
 SigninForm = \csrf ->
@@ -22,11 +16,12 @@ label = 'Log in'
 
 LoginForm = \csrf ->
   FormContainer
-    action      : '/sessions'
+    action      : '/login'
     csrf        : csrf
     h1Label     : label
+    outsideForm : NewUserParagraph
     submitValue : label
-    TextInput
+    EmailInput
       name : 'email'
     PasswordInput
       name : 'password'
