@@ -1,6 +1,6 @@
 module ApplicationHelper
 
-  BOARD = 'rnbqkbnrPppppppp--------------------------------PpPPPPPPRNBQKBNR'
+  BOARD = 'rnbqkbnrpppppppp--------------------------------PPPPPPPPRNBQKBNR'
 
   FULL_CASTLING_RTS   = 'KQkq'
   UNSET_PASSANT_POS   = '-'
@@ -69,10 +69,6 @@ module ApplicationHelper
 
   def server_config
     { id: 'react-node', prerender: true }
-  end
-
-  def logged_in?
-    false
   end
 
   def user_display
