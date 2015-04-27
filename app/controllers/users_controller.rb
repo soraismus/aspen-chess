@@ -24,9 +24,11 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      redirect_to @user, notice: 'User was successfully created.'
+      log_in(@user)
+      #redirect_to @user, notice: 'User was successfully created.'
+      redirect_to root_url, notice: 'User was successfully created.'
     else
-      render :new
+      redirect_to signup_url, flash: { error: 'Invalid signup information' }
     end
   end
 
@@ -53,6 +55,7 @@ class UsersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:name, :email)
+      attrs = %i(name email password password_confirmation)
+      params.require(:user).permit(attrs)
     end
 end
