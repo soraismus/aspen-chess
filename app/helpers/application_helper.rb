@@ -92,10 +92,7 @@ module ApplicationHelper
   end
 
   def view
-    case params[:controller]
-      when 'users'    then 'signup'
-      when 'sessions' then 'login'
-      else                  nil
-    end
+    params[:action]
   end
+
 end
