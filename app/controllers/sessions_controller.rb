@@ -1,4 +1,44 @@
 class SessionsController < ApplicationController
-  def new
+
+  def create
+    user = User.find_by(email: params[:email].downcase)
+
+    if user && user.authenticate(params[:password])
+      log_in(user)
+
+      if request.xhr?
+        render :json => {
+            :alert           => flash,
+            :users           => filter_user_attributes(fellow_players),
+            :current_user    => filter_user_attributes(user),
+            :pagination_html => nil
+          }
+      else
+        redirect_to :root
+      end
+
+    else
+      flash.now[:error] = 'Invalid email/password combination'
+      if request.xhr?
+        render :json => {
+          :alert => flash,
+          :users => [],
+          :current_user => nil,
+          :pagination_html => ''
+        }
+      else
+        render 'new'
+      end
+    end
   end
+
+  def destroy
+    sign_out
+    if request.xhr?
+      render :json => { :alert => flash }
+    else
+      redirect_to :root
+    end
+  end
+
 end
