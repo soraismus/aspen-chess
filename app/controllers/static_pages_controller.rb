@@ -10,11 +10,4 @@ class StaticPagesController < ApplicationController
         }
     end
   end
-
-  private
-
-    def fellow_players(user = current_user)
-      User.except(user)
-    end
-
 end
