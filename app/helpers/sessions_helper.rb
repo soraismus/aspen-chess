@@ -16,6 +16,10 @@ module SessionsHelper
     @current_user = user
   end
 
+  def fellow_players(user = current_user)
+    User.except(user)
+  end
+
   def logged_in?
     !current_user.nil?
   end
