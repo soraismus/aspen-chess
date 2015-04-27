@@ -1,13 +1,15 @@
-Home       = require './home'
-LoginForm  = require './login_form'
-SignupForm = require './signup_form'
+require './home'
+require './login_form'
+require './logout_form'
+require './signup_form'
+
+form? = \view ->
+  /_form/.test view
 
 Main = \props ->
   { csrf, home, view } = props
 
-  switch view
-    when 'login'  then LoginForm csrf
-    when 'signup' then SignupForm csrf
-    else               Home home
+  component = require "./#{view}"
+  component (if form? view then csrf else home)
  
 module.exports = Main
