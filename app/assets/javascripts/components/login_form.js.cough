@@ -22,10 +22,10 @@ label = 'Log in'
 
 LoginForm = \csrf ->
   FormContainer
-    actionPath   : '/sessions'
-    csrf         : csrf
-    h1Label      : label
-    submitValue  : label
+    action      : '/sessions'
+    csrf        : csrf
+    h1Label     : label
+    submitValue : label
     TextInput
       name : 'email'
     PasswordInput

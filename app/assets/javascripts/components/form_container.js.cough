@@ -4,7 +4,7 @@ RailsForm  = require './rails_form'
 RowSpan6_3 = require '../bootstrap_components/row_span6_3'
 
 FormContainer = (props, inputs...) ->
-  { actionPath, csrf, h1Label, outsideForm, submitValue } = props
+  { action, csrf, h1Label, outsideForm, submitValue } = props
 
   Container
     irrelevant : null
@@ -14,7 +14,7 @@ FormContainer = (props, inputs...) ->
     RowSpan6_3
       irrelvant : null
       RailsForm
-        action      : actionPath
+        action      : action
         csrf        : csrf
         submitValue : submitValue
         inputs...

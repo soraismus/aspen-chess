@@ -3,11 +3,11 @@ HiddenFormInputs = require './hidden_form_inputs'
 SubmitButton     = require './submit_button'
 
 RailsForm = (props, inputs...) ->
-  { actionPath, csrf, submitValue } = props
+  { action, csrf, submitValue } = props
 
   form
     acceptCharset : 'UTF-8'
-    action        : actionPath
+    action        : action
     method        : 'post'
     HiddenFormInputs csrf
     inputs...
