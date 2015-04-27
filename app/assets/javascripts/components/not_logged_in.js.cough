@@ -1,14 +1,19 @@
 { div, h1, h2, span } = require './DOM'
-noProps               = null
 SignupButton          = require './signup_button'
-
-welcome = 'Welcome to '
 
 NotSignedIn = ->
   div
     className : 'center hero-unit'  # Bootstrap aspect.
-    h1 (noProps, welcome, span ({ className: 'app-title' }, 'Chessplay'), '.')
-    h2 (noProps, "Matthew Hilty's Rails demo application")
+    h1
+      irrelevant : null
+      'Welcome to '
+      span
+         className : 'app-title' 
+        'Chessplay'
+        '.'
+    h2
+      irrelevant : null
+      "Matthew Hilty's Rails demo application"
     SignupButton ()
 
 module.exports = NotSignedIn

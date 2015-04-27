@@ -1,21 +1,6 @@
 { EmailInput, PasswordInput, TextInput } = require './labeled_input'
 FormContainer                            = require './form_container'
 
-###
-SignupForm = \csrf ->
-  form
-    irrelevant : null
-    TextInput
-      name : 'user[name]'
-    EmailInput
-      name : 'user[email]'
-    PasswordInput
-      name : 'user[password]'
-    PasswordInput
-      label : 'Confirmation'
-      name  : 'user[password_confirmation]'
-###
-
 SignupForm = \csrf ->
   FormContainer
     action      : '/users'

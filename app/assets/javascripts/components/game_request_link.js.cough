@@ -1,5 +1,15 @@
-# __a
+{ a } = require './DOM'
 
+GameRequestLink = (id, index) ->
+  a
+    className     : 'dropdown-toggle' # Bootstrap aspect.
+    'data-index'  : index
+    'data-toggle' : 'dropdown'        # Bootstrap aspect.
+    'data-userid' : id
+    href          : '#'
+    'Request Game'
+
+###
 GameRequestLink = (id, index) ->
   props =
     className      : 'dropdown-toggle' # Bootstrap aspect.
@@ -9,5 +19,6 @@ GameRequestLink = (id, index) ->
     href           : '#'
 
   __a 'GameRequest' (props, ' Request Game')
+###
 
 module.exports = GameRequestLink

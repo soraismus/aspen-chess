@@ -1,12 +1,18 @@
-# fmap-w/-key
-{ ul } = require './DOM'
-User   = require './user'
+{ ul }     = require './DOM'
+createUser = require './user'
 
 UserList = \props ->
   { current_user, users } = props
 
-  users = fmap-w/-key (User current_user) users
+  ul
+    className : 'users'
+    users.map createUser
 
+###
+UserList = \props ->
+  { current_user, users } = props
+  users = fmap-w/-key (User current_user) users
   ul ({ className: 'users' }, users)
+###
 
 module.exports = UserList

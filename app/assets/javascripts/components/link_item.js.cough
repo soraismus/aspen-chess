@@ -1,16 +1,9 @@
 { li } = require './DOM'
-noProps = null
 
 # The first parameter is called 'injectedFactory'
 # b/c of common usage like `LinkItem ((__a 'Home'), '/', 'Home')`.
 
 LinkItem = (injectedFactory, props, linkText) ->
-  li (
-    noProps
-    injectedFactory (
-      props
-      linkText
-    )
-  )
+  li (null, injectedFactory (props, linkText))
 
 module.exports = LinkItem

@@ -4,17 +4,17 @@
 GameRequestMenu = ->
   href = '#'
 
-  game-links = ['WhiteGame', 'BlackGame', 'IndiffGame'].map __a
+  gameLinks = ['WhiteGame', 'BlackGame', 'IndiffGame'].map __a
 
-  game-request-option = (linkText, index, color) ->
+  gameRequestOption = (linkText, index, color) ->
     props = if (? color) then { 'data-color': color, href } else { href }
-    LinkItem (game-links[index], props, linkText)
+    LinkItem (gameLinks[index], props, linkText)
 
   ul
     className: 'dropdown-menu request-game'  # Bootstrap aspect.
 
-    game-request-option ('As white player', 0, white)
-    game-request-option ('As black player', 1, black)
-    game-request-option ('No preference', 2)
+    gameRequestOption ('As white player', 0, white)
+    gameRequestOption ('As black player', 1, black)
+    gameRequestOption ('No preference',   2       )
 
 module.exports = GameRequestMenu

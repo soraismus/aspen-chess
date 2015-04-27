@@ -2,16 +2,6 @@
 FormContainer                 = require './form_container'
 NewUserParagraph              = require './new_user_paragraph'
 
-###
-SigninForm = \csrf ->
-  form
-    irrelevant : null
-    TextInput
-      name : 'email'
-    PasswordInput
-      name : 'password'
-###
-
 label = 'Log in'
 
 LoginForm = \csrf ->

@@ -1,8 +1,4 @@
-# __a
-
 { a, p } = require './DOM'
-
-label = 'Notification'
 
 createNotificationLink = (props, index) ->
   { text } = props
@@ -11,6 +7,7 @@ createNotificationLink = (props, index) ->
     a (props, text)
 
 ###
+label = 'Notification'
 # NotificationLink is mapped.
 NotificationLink = (props, index) ->
   { text } = props

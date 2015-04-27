@@ -8,14 +8,12 @@ hiddenCsrfInput = \csrf ->
   { param, token } = csrf
   hiddenInput { name: csrf.param, value: csrf.token }
 
-hiddenActionInput = \value ->
+hiddenMethodInput = \value ->
   hiddenInput { name: '_method', value }
 
 # Should these two descriptors be in a div-node or in an array?
 HiddenFormInputs = \props ->
   { csrf, method } = props
-
-  actionInput = if method then hiddenActionInput method else null
 
   div
     style :
@@ -26,6 +24,6 @@ HiddenFormInputs = \props ->
       name  : 'utf8'
       value : '✓' 
     hiddenCsrfInput csrf
-    actionInput
+    if method then (hiddenMethodInput method) else null
 
 module.exports = HiddenFormInputs

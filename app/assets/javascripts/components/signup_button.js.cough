@@ -1,15 +1,10 @@
-# __a
-
 { a } = require './DOM'
-
-className = 'btn btn-large btn-primary' # Bootstrap aspect.
-btnMsg    = 'Sign up now.'
 
 SignupButton = ->
   a
-    className : className
+    className : 'btn btn-large btn-primary' # Bootstrap aspect.
     href      : '/signup' 
-    btnMsg
+    'Sign up now.'
 
 #SignupButton = ->
 #  __a 'Home-Signup' ({ className, href: '/signup' }, 'Sign up now.')

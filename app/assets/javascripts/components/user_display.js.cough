@@ -1,15 +1,11 @@
 { div, h1 } = require './DOM'
-# Pagination  = require './pagination'
-# UserList    = require './user_list'
 
 UserDisplay = \props ->
   { pagination, user_list } = props
 
   div
     id : 'main-container' # Bootstrap aspect.
-    h1
-      irrelevant : null
-      'All Users'
+    h1 (null, 'All Users')
 
 ###
 UserDisplay = \props ->
