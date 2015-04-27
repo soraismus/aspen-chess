@@ -1,6 +1,6 @@
 { initialize } = require './aspen'
 topViewFactory = require '../components/app'
-viewImports    = []
+viewImports    = require './view_imports'
 appNodeId      = 'react-node'
 appNode        = document.getElementById appNodeId
 initialState   = JSON.parse appNode.dataset.reactProps

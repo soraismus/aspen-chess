@@ -1,0 +1,6 @@
+blur           = { blur: true }
+blurAndPrevent = { blur: true, preventDefault: true }
+
+module.exports = [
+  ['$form-submits', 'Form', blurAndPrevent]
+]

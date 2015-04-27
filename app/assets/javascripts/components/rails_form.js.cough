@@ -1,11 +1,11 @@
-{ form }         = require './DOM'
+{ $form }        = require './adapters'
 HiddenFormInputs = require './hidden_form_inputs'
 SubmitButton     = require './submit_button'
 
 RailsForm = (props, inputs...) ->
   { action, csrf, method, submitValue } = props
 
-  form
+  $form('Form')
     acceptCharset : 'UTF-8'
     action        : action
     method        : 'post'
