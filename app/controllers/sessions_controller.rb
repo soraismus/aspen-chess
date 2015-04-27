@@ -1,5 +1,8 @@
 class SessionsController < ApplicationController
 
+  def new
+  end
+
   def create
     user = User.find_by(email: params[:email].downcase)
 
@@ -27,6 +30,7 @@ class SessionsController < ApplicationController
           :pagination_html => ''
         }
       else
+        # The path incorrectly changes to '/sessions'.
         render 'new'
       end
     end
