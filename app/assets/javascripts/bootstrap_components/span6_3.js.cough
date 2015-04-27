@@ -1,4 +1,4 @@
-# setDivClassname
+setDivClassname = require '../react_utilities/set_div_classname'
 
 Span6_3 = setDivClassname 'span6 offset3'
 

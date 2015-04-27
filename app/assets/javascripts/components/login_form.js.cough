@@ -5,11 +5,27 @@
 # RowSpan6_3Form
 
 { EmailInput, PasswordInput, TextInput } = require './labeled_input'
+FormContainer                            = require './form_container'
 { form } = require './DOM'
 
+###
 SigninForm = \csrf ->
   form
     irrelevant : null
+    TextInput
+      name : 'email'
+    PasswordInput
+      name : 'password'
+###
+
+label = 'Log in'
+
+LoginForm = \csrf ->
+  FormContainer
+    actionPath   : '/sessions'
+    csrf         : csrf
+    h1Label      : label
+    submitValue  : label
     TextInput
       name : 'email'
     PasswordInput
@@ -31,4 +47,4 @@ SigninForm = \csrf ->
   )
 ###
 
-module.exports = SigninForm
+module.exports = LoginForm

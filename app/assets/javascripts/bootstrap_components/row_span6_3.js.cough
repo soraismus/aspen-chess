@@ -1,6 +1,7 @@
-# apply
-# Row     = require './row'
-# Span6_3 = require './span6_3'
+Row     = require './row'
+Span6_3 = require './span6_3'
 
-RowSpan6_3 = (args...) ->
-  Row (apply Span6_3 args)
+RowSpan6_3 = (props, components...) ->
+  Row ({}, Span6_3 (props, components...))
+
+module.exports = RowSpan6_3

@@ -1,0 +1,23 @@
+Container  = require '../bootstrap_components/container'
+{ h1 }     = require './DOM'
+RailsForm  = require './rails_form'
+RowSpan6_3 = require '../bootstrap_components/row_span6_3'
+
+FormContainer = (props, inputs...) ->
+  { actionPath, csrf, h1Label, outsideForm, submitValue } = props
+
+  Container
+    irrelevant : null
+    h1
+      irrelevant : null
+      h1Label
+    RowSpan6_3
+      irrelvant : null
+      RailsForm
+        action      : actionPath
+        csrf        : csrf
+        submitValue : submitValue
+        inputs...
+      if outsideForm then outsideForm else null
+
+module.exports = FormContainer

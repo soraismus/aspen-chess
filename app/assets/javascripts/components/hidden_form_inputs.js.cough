@@ -1,0 +1,23 @@
+{ div, input } = require './DOM'
+
+hiddenInput = \props ->
+  input { name: props.name, type: 'hidden', value: props.value }
+
+# Can data be injected by the server?
+hiddenCsrfInput = \csrf ->
+  { param, token } = csrf
+  hiddenInput { name: csrf.param, value: csrf.token }
+
+# Should these two descriptors be in a div-node or in an array?
+HiddenFormInputs = \csrf ->
+  div
+    style :
+      display : 'inline'
+      margin  : 0
+      padding : 0
+    hiddenInput
+      name  : 'utf8'
+      value : '✓' 
+    hiddenCsrfInput csrf
+
+module.exports = HiddenFormInputs
