@@ -1,12 +1,9 @@
-Pando           = require 'pando'
-{ DOM, render } = require 'react'
-{ connectTo }   = require 'react-bridge' DOM
-{ initialize }  = require 'reactive-aspen' (render, connectTo, Pando)
-topViewFactory  = require '../components/app'
-viewImports     = []
-appNodeId       = 'react-node'
-appNode         = document.getElementById appNodeId
-initialState    = JSON.parse appNode.dataset.reactProps
+{ initialize } = require './aspen'
+topViewFactory = require '../components/app'
+viewImports    = []
+appNodeId      = 'react-node'
+appNode        = document.getElementById appNodeId
+initialState   = JSON.parse appNode.dataset.reactProps
 
 initialize (appNodeId, topViewFactory, initialState, viewImports)
 

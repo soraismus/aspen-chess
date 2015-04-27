@@ -1,0 +1,6 @@
+{ connectTo } = require './bridge'
+createAspen   = require 'reactive-aspen'
+Pando         = require 'pando'
+{ render }    = require 'react'
+
+module.exports = createAspen (render, connectTo, Pando)

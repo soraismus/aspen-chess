@@ -1,0 +1,4 @@
+{ DOM }      = require 'react'
+createBridge = require 'react-bridge'
+
+module.exports = createBridge DOM
