@@ -1,6 +1,9 @@
 class SessionsController < ApplicationController
 
-  def new
+  def login_form
+  end
+
+  def logout_form
   end
 
   def create
@@ -37,7 +40,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    sign_out
+    log_out
     if request.xhr?
       render :json => { :alert => flash }
     else
