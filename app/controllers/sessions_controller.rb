@@ -34,7 +34,7 @@ class SessionsController < ApplicationController
         }
       else
         # The path incorrectly changes to '/sessions'.
-        render 'new'
+        render 'login_form'
       end
     end
   end
