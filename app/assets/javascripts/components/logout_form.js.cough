@@ -1,0 +1,13 @@
+FormContainer = require './form_container'
+
+label = 'Log out'
+
+LogoutForm = \csrf ->
+  FormContainer
+    action      : '/logout'
+    csrf        : csrf
+    h1Label     : label
+    method      : 'delete'
+    submitValue : label
+
+module.exports = LogoutForm
