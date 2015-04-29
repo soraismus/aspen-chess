@@ -1,7 +1,14 @@
 { appStateProperty } = require '../application/aspen'
-{ connect }          = require '../application/controller'
+{ doAsync }          = require('pando').utilities
 { getComponent }     = require '../utilities/lens_utilities'
 { mapping }          = require('pando').transforms
+{ posting }          = require './ajax'
+
+{ connect
+  getProperty
+  onValue
+  pluIntoTerminus
+} = require '../application/controller'
 
 encodeCsrfData = ({ param, token }) ->
   console.log ('CSRF: ', param, token)
@@ -14,3 +21,54 @@ setField = (field, val) ->
 # instead of: `mapping (getComponent '.main.csrf')`.
 connect appStateProperty, 'csrf', ->
   ; mapping (getComponent '.main.csrf') mapping (encodeCsrfData) ;
+
+# -------------------------------------------------------------------------
+
+connect 'LoginEmail', 'LoginEmailValue', ->
+  mapping (getComponent '.event.target.value')
+
+connect 'LoginPassword', 'LoginPasswordValue', ->
+  mapping (getComponent '.event.target.value')
+
+encodeFormData = \properties ->
+  properties.join '&'
+
+setField = (field, val) ->
+  "#{field}=#{encodeURIComponent val}"
+
+_getLoginFields = ([csrf, loginEmail, loginPassword]) ->
+  [
+    csrf
+    setField ('email', loginEmail)
+    setField ('password', loginPassword)
+  ]
+
+_getLoginData = (loginProperties...) ->
+  encodeFormData (_getLoginFields loginProperties)
+
+loginProperties =
+  ['csrf', 'LoginEmailValue', 'LoginPasswordValue'].map getProperty
+
+getLoginData = ->
+  doAsync _getLoginData loginProperties...
+
+getAjaxProps = (path, data) ->
+  { path, data }
+
+getLoginPostProperties = ->
+  doAsync getAjaxProps ('/login', getLoginData ())
+
+connect '$form-submits', '$login-post-properties', ->
+  mapping getLoginPostProperties
+
+onValue '$login-post-properties', \capsule ->
+  console.log ('login-post-properties: ', capsule)
+
+connect '$login-post-properties', '$ajax-returns', ->
+  posting
+
+# The console statement was:
+# 'ajax-returns: load'
+# where `load` is an object or an event of some kind.
+onValue '$ajax-returns', \capsule ->
+  console.log ('ajax-returns: ', capsule)
