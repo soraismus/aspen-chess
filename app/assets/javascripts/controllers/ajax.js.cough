@@ -3,10 +3,10 @@
 # Submit csrf data under the 'data' attribute.
 ajax = \opts ->
   { data, error, headers, load, method, path } = opts
+  onError = error || \arg -> console.log error
   xhr = new XMLHttpRequest
-  #xhr.addEventListener ('load', load)
-  xhr.addEventListener ('error', error)
-  xhr.onreadystatechange = load
+  xhr.addEventListener ('load', load)
+  xhr.addEventListener ('error', onError)
   xhr.open (method, path)
   headers.forEach \pair -> xhr.setRequestHeader pair...
   xhr.send data
@@ -28,9 +28,7 @@ ajaxing = (sink) -> (props, sourceId, subscriptionId) ->
 transducerFor = \method ->
   (sink) -> (props, sourceId, subscriptionId) ->
     props.method = method
-    props.load = \val ->
-      console.log ('onLoad val: ', val)
-      sink (val, sourceId, subscriptionId)
+    props.load = \val -> sink (val, sourceId, subscriptionId)
     props.headers = AjaxHeadersForJson
     ajax props
 
