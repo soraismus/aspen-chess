@@ -1,4 +1,5 @@
 { EmailInput, PasswordInput } = require './labeled_input'
+{ $EmailInput, $PasswordInput } = require './labeled_input'
 FormContainer                 = require './form_container'
 NewUserParagraph              = require './new_user_paragraph'
 
@@ -11,10 +12,12 @@ LoginForm = \csrf ->
     h1Label     : label
     outsideForm : NewUserParagraph
     submitValue : label
-    EmailInput
+    $EmailInput
       name : 'email'
-    PasswordInput
+      port : 'LoginEmail'
+    $PasswordInput
       name : 'password'
+      port : 'LoginPassword'
 
 ###
 SigninForm = \csrf ->
