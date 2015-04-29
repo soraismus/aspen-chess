@@ -44,7 +44,10 @@ hasType? = \type \val ->
   "[object #{type}]" == Object.prototype.toString.call val
 
 indexable? = \val ->
-  hash? val || array? val
+  object? val || array? val
+
+object? = \val ->
+  val == Object val
 
 process = \keypath ->
   /\.([^\.]*)(\.?.*)$/.exec(keypath).slice(1, 3)
