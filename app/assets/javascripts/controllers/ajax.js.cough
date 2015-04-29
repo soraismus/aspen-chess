@@ -1,0 +1,49 @@
+{ blockTillReady, doAsync } = require('pando').utilities
+
+# Submit csrf data under the 'data' attribute.
+ajax = \opts ->
+  { data, error, headers, load, method, path } = opts
+  xhr = new XMLHttpRequest
+  #xhr.addEventListener ('load', load)
+  xhr.addEventListener ('error', error)
+  xhr.onreadystatechange = load
+  xhr.open (method, path)
+  headers.forEach \pair -> xhr.setRequestHeader pair...
+  xhr.send data
+  return false
+
+AjaxHeaders = [
+  ['Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8']
+  ['X-Requested-With', 'XMLHttpRequest']
+]
+
+AjaxHeadersForJson = AjaxHeaders.concat [
+  ['Accept', 'application/json, text/javascript, */*; q=0.01']]
+
+ajaxing = (sink) -> (props, sourceId, subscriptionId) ->
+  props.load = \val -> sink (val, sourceId, subscriptionId)
+  props.headers = AjaxHeadersForJson
+  ajax props
+
+transducerFor = \method ->
+  (sink) -> (props, sourceId, subscriptionId) ->
+    props.method = method
+    props.load = \val ->
+      console.log ('onLoad val: ', val)
+      sink (val, sourceId, subscriptionId)
+    props.headers = AjaxHeadersForJson
+    ajax props
+
+[deleting, getting, patching, posting] =
+  ['DELETE', 'GET', 'PATCH', 'POST'].map transducerFor
+
+module.exports = {
+  ajax
+  ajaxing
+  AjaxHeaders
+  AjaxHeadersForJson
+  deleting
+  getting
+  patching
+  posting
+}
