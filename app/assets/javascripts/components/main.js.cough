@@ -9,8 +9,11 @@ form? = \view ->
 
 Main = \props ->
   { csrf, home, view } = props
-
-  component = require "./#{view}" || Home
-  component (if form? view then csrf else home)
+  
+  if form? view
+    component = require "./#{view}"
+    component csrf
+  else
+    Home home
  
 module.exports = Main
