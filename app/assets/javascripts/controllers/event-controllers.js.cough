@@ -7,11 +7,10 @@
 { connect
   getProperty
   onValue
-  pluIntoTerminus
+  plugIntoTerminus
 } = require '../application/controller'
 
 encodeCsrfData = ({ param, token }) ->
-  console.log ('CSRF: ', param, token)
   setField (param, token)
 
 setField = (field, val) ->
@@ -23,18 +22,11 @@ connect appStateProperty, 'csrf', ->
   ; mapping (getComponent '.main.csrf') mapping (encodeCsrfData) ;
 
 # -------------------------------------------------------------------------
-
-connect 'LoginEmail', 'LoginEmailValue', ->
-  mapping (getComponent '.event.target.value')
-
-connect 'LoginPassword', 'LoginPasswordValue', ->
-  mapping (getComponent '.event.target.value')
-
 encodeFormData = \properties ->
   properties.join '&'
 
-setField = (field, val) ->
-  "#{field}=#{encodeURIComponent val}"
+getAjaxProps = (path, data) ->
+  { path, data }
 
 _getLoginFields = ([csrf, loginEmail, loginPassword]) ->
   [
@@ -46,29 +38,29 @@ _getLoginFields = ([csrf, loginEmail, loginPassword]) ->
 _getLoginData = (loginProperties...) ->
   encodeFormData (_getLoginFields loginProperties)
 
-loginProperties =
-  ['csrf', 'LoginEmailValue', 'LoginPasswordValue'].map getProperty
-
 getLoginData = ->
   doAsync _getLoginData loginProperties...
-
-getAjaxProps = (path, data) ->
-  { path, data }
 
 getLoginPostProperties = ->
   doAsync getAjaxProps ('/login', getLoginData ())
 
+resetAppStateFromAjaxResponse = \capsule \appState ->
+  JSON.parse capsule.target.response
+
+loginProperties =
+  ['csrf', 'LoginEmailValue', 'LoginPasswordValue'].map getProperty
+
+connect 'LoginEmail', 'LoginEmailValue', ->
+  mapping (getComponent '.event.target.value')
+
+connect 'LoginPassword', 'LoginPasswordValue', ->
+  mapping (getComponent '.event.target.value')
+
 connect '$form-submits', '$login-post-properties', ->
   mapping getLoginPostProperties
-
-onValue '$login-post-properties', \capsule ->
-  console.log ('login-post-properties: ', capsule)
 
 connect '$login-post-properties', '$ajax-returns', ->
   posting
 
-# The console statement was:
-# 'ajax-returns: load'
-# where `load` is an object or an event of some kind.
-onValue '$ajax-returns', \capsule ->
-  console.log ('ajax-returns: ', capsule)
+plugIntoTerminus '$ajax-returns', ->
+  mapping resetAppStateFromAjaxResponse 
