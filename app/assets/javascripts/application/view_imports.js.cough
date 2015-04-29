@@ -6,6 +6,7 @@ module.exports = [
   # However, there should be a default scheme;
   # preferably one where explicit registration isn't necessary at all.
   # Also, there should be an alerting system if a label is 'incorrect'.
+  # There should be config options that extract values from DOM targets.
   ['LoginEmail',    'LoginEmail'   ]
   ['LoginPassword', 'LoginPassword']
 
