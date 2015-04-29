@@ -13,12 +13,7 @@ class SessionsController < ApplicationController
       log_in(user)
 
       if request.xhr?
-        render :json => {
-            :alert           => flash,
-            :users           => filter_user_attributes(fellow_players),
-            :current_user    => filter_user_attributes(user),
-            :pagination_html => nil
-          }
+        render :json => app_state
       else
         redirect_to :root
       end
