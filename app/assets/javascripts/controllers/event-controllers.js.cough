@@ -1,0 +1,16 @@
+{ appStateProperty } = require '../application/aspen'
+{ connect }          = require '../application/controller'
+{ getComponent }     = require '../utilities/lens_utilities'
+{ mapping }          = require('pando').transforms
+
+encodeCsrfData = ({ param, token }) ->
+  console.log ('CSRF: ', param, token)
+  setField (param, token)
+
+setField = (field, val) ->
+  "#{field}=#{encodeURIComponent val}"
+
+# Eventually: `mapping ('.main.csrf')`
+# instead of: `mapping (getComponent '.main.csrf')`.
+connect appStateProperty, 'csrf', ->
+  ; mapping (getComponent '.main.csrf') mapping (encodeCsrfData) ;
