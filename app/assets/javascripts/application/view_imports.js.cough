@@ -2,5 +2,12 @@ blur           = { blur: true }
 blurAndPrevent = { blur: true, preventDefault: true }
 
 module.exports = [
+  # [DomNode, EventNode] to accommodate different event types.
+  # However, there should be a default scheme;
+  # preferably one where explicit registration isn't necessary at all.
+  # Also, there should be an alerting system if a label is 'incorrect'.
+  ['LoginEmail',    'LoginEmail'   ]
+  ['LoginPassword', 'LoginPassword']
+
   ['$form-submits', 'Form', blurAndPrevent]
 ]
