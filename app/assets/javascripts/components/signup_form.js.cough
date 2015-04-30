@@ -1,42 +1,25 @@
-{ EmailInput, PasswordInput, TextInput } = require './labeled_input'
-FormContainer                            = require './form_container'
+{ $EmailInput, $PasswordInput, $TextInput } = require './labeled_input'
+FormContainer                               = require './form_container'
 
 SignupForm = \csrf ->
   FormContainer
     action      : '/users'
     csrf        : csrf
     h1Label     : 'Sign up'
+    port        : 'SignupForm'
     submitValue : 'Create my account'
-    TextInput
+    $TextInput
       name : 'user[name]'
-    EmailInput
+      port : 'SignupName'
+    $EmailInput
       name : 'user[email]'
-    PasswordInput
+      port : 'SignupEmail'
+    $PasswordInput
       name : 'user[password]'
-    PasswordInput
+      port : 'SignupPassword'
+    $PasswordInput
       label : 'Confirmation'
       name  : 'user[password_confirmation]'
-
-###
-SignupForm = \csrf ->
-  confirm-props =
-    label : 'Confirmation'
-    name  : 'user[password_confirmation]' 
-
-  MainForm (
-    {
-      form        : RowSpan6_3Form 'Signup'
-      actionPath  : '/users'
-      csrf        : csrf
-      h1Label     : 'Sign up'
-      submitValue : 'Create my account'
-    }
-
-    __TextInput 'SignupName' { name: 'user[name]' }
-    __TextInput 'SignupEmail' { name: 'user[email]' }
-    __PasswordInput 'SignupPassword' { name: 'user[password]' }
-    __PasswordInput 'SignupConfirm' confirm-props
-  )
-###
+      port  : 'SignupConfirmation'
 
 module.exports = SignupForm

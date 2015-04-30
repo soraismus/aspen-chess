@@ -8,6 +8,7 @@ LogoutForm = \csrf ->
     csrf        : csrf
     h1Label     : label
     method      : 'delete'
+    port        : 'LogoutForm'
     submitValue : label
 
 module.exports = LogoutForm

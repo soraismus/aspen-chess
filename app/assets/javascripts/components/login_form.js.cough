@@ -1,4 +1,3 @@
-{ EmailInput, PasswordInput } = require './labeled_input'
 { $EmailInput, $PasswordInput } = require './labeled_input'
 FormContainer                 = require './form_container'
 NewUserParagraph              = require './new_user_paragraph'
@@ -11,6 +10,7 @@ LoginForm = \csrf ->
     csrf        : csrf
     h1Label     : label
     outsideForm : NewUserParagraph
+    port        : 'LoginForm'
     submitValue : label
     $EmailInput
       name : 'email'
@@ -18,21 +18,5 @@ LoginForm = \csrf ->
     $PasswordInput
       name : 'password'
       port : 'LoginPassword'
-
-###
-SigninForm = \csrf ->
-  MainForm (
-    {
-      form        : RowSpan6_3Form 'Signin'
-      actionPath  : '/sessions'
-      h1Label     : 'Sign in'
-      csrf        : csrf
-      submitValue : 'Sign in'
-      outsideForm : NewUserParagraph ()
-    }
-    __TextInput 'SigninEmail' { name: 'email' }
-    __PasswordInput 'SigninPassword' { name: 'password' }
-  )
-###
 
 module.exports = LoginForm
