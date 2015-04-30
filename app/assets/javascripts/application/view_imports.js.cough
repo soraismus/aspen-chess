@@ -10,5 +10,7 @@ module.exports = [
   ['LoginEmail',    'LoginEmail'   ]
   ['LoginPassword', 'LoginPassword']
 
-  ['$form-submits', 'Form', blurAndPrevent]
+  ['$login-clicks', 'Login',  blurAndPrevent]
+  ['$logout-clicks','Logout', blurAndPrevent]
+  ['$form-submits', 'Form',   blurAndPrevent]
 ]
