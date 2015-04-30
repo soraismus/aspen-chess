@@ -1,8 +1,8 @@
-{ appStateProperty } = require '../application/aspen'
-{ doAsync }          = require('pando').utilities
-{ getComponent }     = require '../utilities/lens_utilities'
-{ mapping }          = require('pando').transforms
-{ posting }          = require './ajax'
+{ appStateProperty }  = require '../application/aspen'
+{ doAsync }           = require('pando').utilities
+{ getComponent }      = require '../utilities/lens_utilities'
+{ mapping }           = require('pando').transforms
+{ deleting, posting } = require './ajax'
 
 { connect
   getProperty
@@ -64,3 +64,15 @@ connect '$login-post-properties', '$ajax-returns', ->
 
 plugIntoTerminus '$ajax-returns', ->
   mapping resetAppStateFromAjaxResponse 
+
+# -------------------------------------------------------------------------
+onValue '$logout-clicks', \capsule ->
+  console.log ('$logout-clicks', capsule)
+
+csrf = getProperty 'csrf'
+
+getLogoutDeleteProperties = ->
+  doAsync getAjaxProps ('/logout', csrf)
+
+connect '$logout-clicks', '$ajax-returns', ->
+  ; mapping (getLogoutDeleteProperties) deleting ;
