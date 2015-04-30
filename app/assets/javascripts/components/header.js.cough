@@ -1,12 +1,16 @@
 { a, nav, ul }       = require './DOM'
 FixedNavbarContainer = require '../bootstrap_components/fixed_navbar_container'
+{ $link }            = require './adapters'
 LinkItem             = require './link_item'
 SessionManagement    = require './session_management'
+
+HomeLink      = $link 'Home'
+ChessPlayLink = $link 'ChessPlay'
 
 Header = \loggedIn? ->
   FixedNavbarContainer
     irrelevant : null
-    a
+    ChessPlayLink
       href : '/#'
       id   : 'logo'
       'ChessPlay'
@@ -14,29 +18,8 @@ Header = \loggedIn? ->
       irrelevant : null
       ul
         className : 'viewport-right'
-        LinkItem (a, { href: '/' }, 'Home')
-        LinkItem (a, { href: '#' }, 'Contact')
+        LinkItem (HomeLink, { href: '/' }, 'Home')
+        LinkItem (a,        { href: '#' }, 'Contact')
         SessionManagement loggedIn?
-
-###
-Header = \props ->
-  { logged_in } = props
-
-  FixedNavbarContainer (
-
-    # Bootstrap aspect?
-    __a 'ChessPlay' ({ href: '#', id: 'logo' }, 'ChessPlay')
-
-    nav (
-      noProps
-      ul (
-        { className: 'viewport-right' } # CSS aspect.
-        LinkItem ((__a 'Home'), '/', 'Home')
-        LinkItem ((__a 'Contact'), '#', 'Contact')
-        SessionManagement logged_in 
-      )
-    )
-  )
-###
 
 module.exports = Header

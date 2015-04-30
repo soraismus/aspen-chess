@@ -1,12 +1,9 @@
-{ a } = require './DOM'
+{ $link } = require './adapters'
 
 SignupButton = ->
-  a
+  $link('SignupFromHome')
     className : 'btn btn-large btn-primary' # Bootstrap aspect.
     href      : '/signup' 
     'Sign up now.'
-
-#SignupButton = ->
-#  __a 'Home-Signup' ({ className, href: '/signup' }, 'Sign up now.')
 
 module.exports = SignupButton

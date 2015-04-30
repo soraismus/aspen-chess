@@ -1,8 +1,7 @@
-{ a, p } = require './DOM'
-
-# _p ('New User? ', (__a 'Signin-Signup' ('#', 'Sign up now!')))
+{ p }     = require './DOM'
+{ $link } = require './adapters'
 
 NewUserParagraph = ->
-  p (null, a ({ href: '/signup' }, 'Sign up now.'))
+  p (null, $link 'SignupFromSignin' ({ href: '/signup' }, 'Sign up now.'))
 
 module.exports = NewUserParagraph
