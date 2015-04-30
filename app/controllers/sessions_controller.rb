@@ -37,7 +37,7 @@ class SessionsController < ApplicationController
   def destroy
     log_out
     if request.xhr?
-      render :json => { :alert => flash }
+      render :json => app_state
     else
       redirect_to :root
     end
