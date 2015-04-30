@@ -1,22 +1,15 @@
-# __a
-{ a }    = require './DOM'
+{ $link } = require './adapters'
 LinkItem = require './link_item'
 
 SessionManagement = \loggedIn? ->
-  href     = if loggedIn? then '/logout' else '/login'
-  linkText = if loggedIn? then 'Log out' else 'Log in'
-  LinkItem (a, { href }, linkText)
-
-###
-SessionManagement = \logged-in? ->
-  #login-link  = __a 'Login'
-  #logout-link = __a 'Logout'
-
-  injected-link = if logged-in? then logout-link else login-link
-  href          = if logged-in? then '/logout' else '/login'
-  link-text     = if logged-in? then 'Log out' else 'Log in'
-
-  LinkItem (injected-link, href, link-text)
-###
+  if loggedIn?
+    href         = '/logout'
+    injectedLink = $link 'Logout'
+    linkText     = 'Log out'
+  else
+    href         = '/login'
+    injectedLink = $link 'Login'
+    linkText     = 'Log in'
+  LinkItem (injectedLink, href, linkText)
 
 module.exports = SessionManagement
