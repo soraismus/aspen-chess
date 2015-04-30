@@ -123,3 +123,16 @@ connect '$signup-confirmation-changes', 'SignupConfirmation', ->
 
 connect '$signup-form-submits', '$ajax-returns', ->
   ; mapping (getSignupPostProperties) posting ;
+
+# -------------------------------------------------------------------------
+plugIntoTerminus '$home-clicks', ->
+  mapping (resetView 'home')
+
+plugIntoTerminus '$chessplay-clicks', ->
+  mapping (resetView 'home')
+
+plugIntoTerminus '$signin-signup-clicks', ->
+  mapping (resetView 'signup_form')
+
+plugIntoTerminus '$home-signup-clicks', ->
+  mapping (resetView 'signup_form')
