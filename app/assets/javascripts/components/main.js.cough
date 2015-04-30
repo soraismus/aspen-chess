@@ -7,13 +7,13 @@ Home = require './home'
 form? = \view ->
   /_form/.test view
 
-Main = \props ->
+Main = (loggedIn?, props) ->
   { csrf, home, view } = props
   
   if form? view
     component = require "./#{view}"
     component csrf
   else
-    Home home
+    Home (loggedIn?, home)
  
 module.exports = Main

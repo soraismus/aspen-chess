@@ -5,13 +5,13 @@ Header          = require './header'
 Main            = require './main'
 
 App = \props ->
-  { alert, debug, header, main } = props
+  { alert, debug, logged_in, main } = props
 
   div
     id : 'app'
-    Header header
+    Header logged_in
     AlertMessages alert
-    Main main
+    Main (logged_in, main)
     footer null
     Debug debug
 

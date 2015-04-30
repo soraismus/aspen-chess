@@ -1,11 +1,9 @@
 NotLoggedIn = require './not_logged_in'
 LoggedIn    = require './logged_in'
 
-Home = \props ->
-  { logged_in, user_home_view } = props
-
-  if logged_in
-    LoggedIn user_home_view
+Home = (loggedIn?, userHomeView) ->
+  if loggedIn?
+    LoggedIn userHomeView
   else
     NotLoggedIn ()
 

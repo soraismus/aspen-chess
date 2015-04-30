@@ -3,9 +3,7 @@ FixedNavbarContainer = require '../bootstrap_components/fixed_navbar_container'
 LinkItem             = require './link_item'
 SessionManagement    = require './session_management'
 
-Header = \props ->
-  { logged_in } = props
-
+Header = \loggedIn? ->
   FixedNavbarContainer
     irrelevant : null
     a
@@ -18,7 +16,7 @@ Header = \props ->
         className : 'viewport-right'
         LinkItem (a, { href: '/' }, 'Home')
         LinkItem (a, { href: '#' }, 'Contact')
-        SessionManagement logged_in
+        SessionManagement loggedIn?
 
 ###
 Header = \props ->

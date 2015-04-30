@@ -12,7 +12,7 @@ module ApplicationHelper
   end
 
   def app_state
-    { alert: alert, debug: debug, header: header, main: main }
+    { alert: alert, debug: debug, logged_in: logged_in?, main: main }
   end
 
   def chess
@@ -49,14 +49,13 @@ module ApplicationHelper
                       .html_safe
   end
 
-  # WET; c.f. `home`.
-  def header
-    { logged_in: logged_in? }
-  end
-
-  # WET; c.f. `header`.
   def home
-    { user_home_view: user_home_view, logged_in: logged_in? }
+    {
+      chess: chess,
+      notifications: [],
+      playing: false,
+      user_display: user_display
+    }
   end
 
   def main
@@ -73,15 +72,6 @@ module ApplicationHelper
 
   def user_display
     { pagination: pagination, user_list: user_list }
-  end
-
-  def user_home_view
-    {
-      chess: chess,
-      notifications: [],
-      playing: false,
-      user_display: user_display
-    }
   end
 
   def user_list
