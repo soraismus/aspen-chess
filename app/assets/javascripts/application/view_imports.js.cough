@@ -1,4 +1,3 @@
-blur           = { blur: true }
 blurAndPrevent = { blur: true, preventDefault: true }
 
 module.exports = [
@@ -7,10 +6,15 @@ module.exports = [
   # preferably one where explicit registration isn't necessary at all.
   # Also, there should be an alerting system if a label is 'incorrect'.
   # There should be config options that extract values from DOM targets.
-  ['LoginEmail',    'LoginEmail'   ]
-  ['LoginPassword', 'LoginPassword']
+  ['$login-email-changes',         'LoginEmail'   ]
+  ['$login-password-changes',      'LoginPassword']
+  ['$signup-name-changes',         'SignupName'   ]
+  ['$signup-email-changes',        'SignupEmail'   ]
+  ['$signup-password-changes',     'SignupPassword']
+  ['$signup-confirmation-changes', 'SignupConfirmation']
 
-  ['$login-clicks', 'Login',  blurAndPrevent]
-  ['$logout-clicks','Logout', blurAndPrevent]
-  ['$form-submits', 'Form',   blurAndPrevent]
+  ['$login-clicks',        'Login',      blurAndPrevent]
+  ['$logout-clicks',       'Logout',     blurAndPrevent]
+  ['$login-form-submits',  'LoginForm',  blurAndPrevent]
+  ['$signup-form-submits', 'SignupForm', blurAndPrevent]
 ]
