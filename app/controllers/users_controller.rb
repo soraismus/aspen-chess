@@ -25,8 +25,13 @@ class UsersController < ApplicationController
 
     if @user.save
       log_in(@user)
-      #redirect_to @user, notice: 'User was successfully created.'
-      redirect_to root_url, notice: 'User was successfully created.'
+
+      if request.xhr?
+        render :json => app_state
+      else
+        redirect_to root_url, notice: 'User was successfully created.'
+      end
+
     else
       redirect_to signup_url, flash: { error: 'Invalid signup information' }
     end
