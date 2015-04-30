@@ -48,19 +48,16 @@ resetAppStateFromAjaxResponse = \capsule \appState ->
   JSON.parse capsule.target.response
 
 loginProperties =
-  ['csrf', 'LoginEmailValue', 'LoginPasswordValue'].map getProperty
+  ['csrf', 'LoginEmail', 'LoginPassword'].map getProperty
 
-connect 'LoginEmail', 'LoginEmailValue', ->
+connect '$login-email-changes', 'LoginEmail', ->
   mapping (getComponent '.event.target.value')
 
-connect 'LoginPassword', 'LoginPasswordValue', ->
+connect '$login-password-changes', 'LoginPassword', ->
   mapping (getComponent '.event.target.value')
 
-connect '$form-submits', '$login-post-properties', ->
-  mapping getLoginPostProperties
-
-connect '$login-post-properties', '$ajax-returns', ->
-  posting
+connect '$login-form-submits', '$ajax-returns', ->
+  ; mapping (getLoginPostProperties) posting ;
 
 plugIntoTerminus '$ajax-returns', ->
   mapping resetAppStateFromAjaxResponse 
@@ -80,3 +77,49 @@ resetView = \view \capsule \appState ->
 
 plugIntoTerminus '$login-clicks', ->
   mapping (resetView 'login_form')
+
+# -------------------------------------------------------------------------
+setUserField = (field, val) ->
+  "user[#{field}]=#{encodeURIComponent val}"
+
+_getSignupFields =
+  ([csrf, signupName, signupEmail, signupPassword, signupConfirmation]) ->
+    [
+      csrf
+      setUserField ('name', signupName)
+      setUserField ('email', signupEmail)
+      setUserField ('password', signupPassword)
+      setUserField ('password_confirmation', signupConfirmation)
+    ]
+
+_getSignupData = (signupProperties...) ->
+  encodeFormData (_getSignupFields signupProperties)
+
+getSignupData = ->
+  doAsync _getSignupData signupProperties...
+
+getSignupPostProperties = ->
+  doAsync getAjaxProps ('/users', getSignupData ())
+
+signupProperties =
+  [ 'csrf'
+    'SignupName'
+    'SignupEmail'
+    'SignupPassword'
+    'SignupConfirmation'
+  ].map getProperty
+
+connect '$signup-name-changes', 'SignupName', ->
+  mapping (getComponent '.event.target.value')
+
+connect '$signup-email-changes', 'SignupEmail', ->
+  mapping (getComponent '.event.target.value')
+
+connect '$signup-password-changes', 'SignupPassword', ->
+  mapping (getComponent '.event.target.value')
+
+connect '$signup-confirmation-changes', 'SignupConfirmation', ->
+  mapping (getComponent '.event.target.value')
+
+connect '$signup-form-submits', '$ajax-returns', ->
+  ; mapping (getSignupPostProperties) posting ;
